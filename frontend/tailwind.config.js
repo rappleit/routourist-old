@@ -24,11 +24,13 @@ module.exports = {
     },
 colors: {
     'eggshell':'#F7F4E3',
-    'green':'#7CC290',
+    'darkgreen':'#69B880',
+    'green':'#76B989',
     'gray':'#40413F',
   },
 fontWeight: {
   'black':'900',
+  'bold':'700',
   'medium':'500',
 
 },
