@@ -60,7 +60,7 @@ however them you like and start.</p>
             <div className='py-10 mx-5'>
               <p className='font-bodyfont font-medium text-base text-gray mb-10'>Our Goal</p>
               <h2 className='font-titleFont font-bold text-5xl text-gray'>Provide a convenient routing service that 
-  aims to reduce user's carbon footprint</h2>
+  aims to reduce user`&apos;`s carbon footprint</h2>
             </div>
 
             <div className='grid grid-cols-9 gap-40 mt-10'>

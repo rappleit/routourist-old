@@ -1,7 +1,8 @@
-require('dotenv').config()
+require('dotenv').config({ path: `${__dirname}/../.env` })
 
 const mongoose = require('mongoose')
 const express = require('express')
+const cors = require('cors');
 
 const userRoutes = require('./routes/user')
 
@@ -9,6 +10,10 @@ const userRoutes = require('./routes/user')
 const app = express()
 
 //middleware
+
+app.use(cors());
+app.options('*', cors());
+
 app.use(express.json())
 
 app.use((req, res, next) => {
