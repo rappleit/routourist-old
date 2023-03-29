@@ -7,23 +7,62 @@ import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrow
 import Link from 'next/link';
 import { useAuthContext } from '@/hooks/useAuthContext';
 import { useLogout } from '@/hooks/useLogout';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
+import ReactDOM from 'react-dom';
+
 
 export default function Map() {
     const { user } = useAuthContext()
     const { logout } = useLogout()
 
+    const autoCompleteOptions = {
+        componentRestrictions: { country: "sg" },
+    };
+
+    const [gmap, setGMap] = useState(null)
+    const [gdirectionsService, setGDirectionsService] = useState(null)
+    const [gplacesSearch, setGPlacesSearch] = useState(null)
+    const [gdestAutoComplete, setGDestAutoComplete] = useState(null)
+
+    const [waypointsNum, setWaypointsNum] = useState(2)
+
     const handleLogout = () => {
         logout()
     }
 
-    useEffect(() => {
-        window.initMap = () => {
-            const autoCompleteOptions = {
-                componentRestrictions: {country: "sg"},
-            };
+    const addWaypoint = (e) => {
+        e.preventDefault();
+        if (waypointsNum < 10) {
+            setWaypointsNum(waypointsNum + 1)
+        }
 
+        /*const waypointsList = document.querySelector("#waypointsList")
+        const inputDiv = document.createElement("div")
+        inputDiv.setAttributeNS(null, "className", "flex")
+        waypointsList.appendChild(inputDiv)
+        const inputField = document.createElement("input")
+        inputField.setAttributeNS(null, "className", "toRef px-3 py-1 border-1 w-11/12 rounded-md")
+        inputField.setAttribute("placeholder", "To where?")
+        inputDiv.appendChild(inputField)*/
+
+        
+        
+    }
+
+    useEffect(() => {
+        if (waypointsNum > 2) {
+            const allDestInputs = document.querySelectorAll("input.toRef");
+            console.log(allDestInputs[1])
+        for (var j = 0; j < allDestInputs.length; j++) {
+            const newDestAutoComplete = new google.maps.places.Autocomplete(
+              (allDestInputs[j]), autoCompleteOptions);
+          }
+        }
+    }, [waypointsNum])
+
+    if (typeof window != "undefined") {
+        window.initMap = () => {
             const map = new google.maps.Map(document.querySelector("#map"), {
                 center: { lat: 1.3521, lng: 103.8198 },
                 zoom: 12,
@@ -45,8 +84,13 @@ export default function Map() {
             );
             const placesSearch = new google.maps.places.PlacesService(map);
             //const allData = retrieveAllData();
+
+            setGMap(map)
+            setGDirectionsService(directionsService)
+            setGPlacesSearch(placesSearch)
+            setGDestAutoComplete(destAutocomplete)
         }
-    }, [])
+    }
 
 
     return (
@@ -64,21 +108,29 @@ export default function Map() {
                         </div>
 
                         <form className='basis-7/12 mt-2 flex flex-col justify-evenly'>
-                            <div className='font-bodyfont flex flex-col h-1/4 gap-2 overflow-auto'> {/* this is for the inputs */}
+                            <div id="waypointsList" className='font-bodyfont flex flex-col h-24 gap-2 overflow-auto'> {/* this is for the inputs */}
                                 <div className='flex'>
-                                    <input id="fromRef" placeholder='From where?' className='px-3 py-1 border-1 w-11/12 rounded-md'></input>
+                                    <input id="fromRef" placeholder='From where?' className='px-3 py-1 border-1 w-11/12 rounded-md' type="text"></input>
                                     <MoreVertIcon className='text-eggshell text-3xl' />
                                 </div>
                                 <div className='flex'>
-                                    <input placeholder='To where?' className='toRef px-3 py-1 border-1 w-11/12 rounded-md'></input>
+                                    <input placeholder='To where?' className='toRef px-3 py-1 border-1 w-11/12 rounded-md' type="text"></input>
                                     <MoreVertIcon className='text-eggshell text-3xl' />
                                 </div>
+                                {
+                                    [...Array(waypointsNum - 2)].map((wp, i) => (
+                                        <div className='flex' key={i}>
+                                            <input placeholder='To where?' className='toRef px-3 py-1 border-1 w-11/12 rounded-md' type="text" />
+                                            <MoreVertIcon className='text-eggshell text-3xl' />
+                                        </div>
+                                    ))
+                                }
 
                             </div>
 
                             <div className='flex justify-center'> {/* this is for the add */}
                                 <div>
-                                    <AddCircleOutlineIcon className='text-eggshell text-3xl cursor-pointer' />
+                                    <button onClick={(e) => addWaypoint(e)}><AddCircleOutlineIcon className='text-eggshell text-3xl cursor-pointer' /></button>
                                 </div>
 
                             </div>
