@@ -1,16 +1,19 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
-export const useSignup = () => {
+export const useLogin = () => {
     const [error, setError] = useState(null)
     const [isLoading, setIsLoading] = useState(null)
     const { dispatch } = useAuthContext()
- 
-    const signup = async (email, password) => {
+
+    const router = useRouter()
+
+    const login = async (email, password) => {
         setIsLoading(true)
         setError(null)
         
-        const response = await fetch('http://localhost:8000/api/user/signup', {
+        const response = await fetch('http://localhost:8000/api/user/login', {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({email, password})
@@ -18,7 +21,6 @@ export const useSignup = () => {
         const json =  await response.json()
 
         if (!response.ok) {
-            console.log('this doesnt work')
             setIsLoading(false)
             setError(json.error)
         } else if (response.ok) {
@@ -29,9 +31,10 @@ export const useSignup = () => {
             dispatch({type: "LOGIN", payload: json})
             
             setIsLoading(false)
+            router.push("/map")
         }
     }
 
-return { signup, isLoading, error }
+return { login, isLoading, error }
    
 }

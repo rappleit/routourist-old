@@ -25,9 +25,12 @@ export default function Home() {
                 <div className='ml-8'>examples</div>
               </div>
               <div className='col-span-2 row-span-1 justify-center'>
+<<<<<<< HEAD
                 <Link href=""><button className='font-medium font-bodyfont rounded-full w-20 h-10 bg-gray text-eggshell shadow-md self-center hover:bg-green hover:text-eggshell'>Login</button></Link>
+=======
+                <Link href="/map"><button className='font-medium font-bodyfont rounded-full w-40 py-4 bg-gray text-eggshell shadow-md self-center hover:bg-green hover:text-eggshell'>Try Now!</button></Link>
+>>>>>>> af939e4bbf7eecc5c25b30c4563c008c2ee7adee
                 
-                <Link href="/signup"><button className='font-medium font-bodyfont rounded-full w-20 h-10 bg-eggshell text-gray ml-4 shadow-md self-center hover:bg-green hover:text-eggshell'>Sign Up</button></Link>
               </div>
             </div>
           </div>
@@ -60,7 +63,7 @@ however them you like and start.</p>
             <div className='py-10 mx-5'>
               <p className='font-bodyfont font-medium text-base text-gray mb-10'>Our Goal</p>
               <h2 className='font-titleFont font-bold text-5xl text-gray'>Provide a convenient routing service that 
-  aims to reduce user's carbon footprint</h2>
+  aims to reduce user&apos;s carbon footprint</h2>
             </div>
 
             <div className='grid grid-cols-9 gap-40 mt-10'>

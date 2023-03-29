@@ -1,14 +1,16 @@
 import Link from "next/link"
 import { useState } from "react"
+import { useLogin } from "@/hooks/useLogin"
 
 export default function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const {login, error, isLoading} = useLogin()
 
     const handleSubmit= async (e) => {
         e.preventDefault()
 
-        console.log(email, password)
+        await login(email, password)
     }
     return (
         <div className="loginPage bg-eggshell w-full h-full">
@@ -34,10 +36,12 @@ export default function Login() {
                                 className="border w-full p-2 rounded-md mb-6"
                             />
                         </div>
-                        <button className="p-2 bg-green hover:bg-lightgreen text-white w-full rounded-md font-medium">Login</button>
+                        <button disabled={isLoading} className="p-2 bg-green hover:bg-lightgreen text-white w-full rounded-md font-medium">{isLoading ? "Please Wait" : "Log in"}</button>
+                        {error && <p className="text-red-500 font-medium text-center mt-4">{error}</p>}
                     </form>
 
-                    <p>Don't have an account? <Link href="/signup" className="text-darkgreen underline">Sign up here</Link></p>
+                    <p>Don&apos;t have an account? <Link href="/signup" className="text-darkgreen underline">Sign up here</Link></p>
+                    <Link href="/map" className="text-darkgreen underline my-6">Go to Map</Link>
                 </div>
 
             </div>
