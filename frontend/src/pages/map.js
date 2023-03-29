@@ -25,12 +25,20 @@ export default function Map() {
     const [gplacesSearch, setGPlacesSearch] = useState(null)
     const [gdestAutoComplete, setGDestAutoComplete] = useState(null)
     const [markersPolylines, setMarkersPolylines] = useState([])
-
+    const [lat_lngArray, setLat_LngArray] = useState([])
+    
+    const [isAttractionsDropdownOpen, setIsAttractionsDropdownOpen] = useState(false)
 
     const [waypointsNum, setWaypointsNum] = useState(2)
 
-    const handleLogout = () => {
+    const handleLogout = (e) => {
+        e.preventDefault();
         logout()
+    }
+
+    const handleAttractionsDropdown = (e) => {
+        e.preventDefault();
+        setIsAttractionsDropdownOpen(!isAttractionsDropdownOpen)
     }
 
     const addWaypoint = (e) => {
@@ -480,12 +488,12 @@ export default function Map() {
                                 })
                             );
                             return `${index + 1}. Take ${step["transit"]["line"]["name"].length < 4 ||
-                                    step["transit"]["line"]["name"].includes(
-                                        "Sentosa"
-                                    ) ||
-                                    step["transit"]["line"]["name"].includes("Shuttle")
-                                    ? "BUS"
-                                    : "MRT"
+                                step["transit"]["line"]["name"].includes(
+                                    "Sentosa"
+                                ) ||
+                                step["transit"]["line"]["name"].includes("Shuttle")
+                                ? "BUS"
+                                : "MRT"
                                 } <b>${step["transit"]["line"]["name"]}</b>  ${step["transit"]["departure_stop"]["name"]
                                 } -> ${step["transit"]["arrival_stop"]["name"]} for ${step["transit"]["num_stops"]
                                 } ${step["transit"]["num_stops"] > 1 ? "stops" : "stop"}
@@ -512,6 +520,27 @@ export default function Map() {
             })
         );
         document.querySelector("#directionsPanel").innerHTML += routeDirections;
+    }
+
+    const getLat_LngArray = (result) => {
+        /**
+     * Returns array of latitudes and longitudes from the given Google Maps Directions API result object
+     * @param {Object} result - Result object returned by the Google Maps Directions API
+     * @returns {Array} Array of latitudes and longitudes from the result object
+     *
+     * Eg. i % 100 takes every 100th lat_lng from each step, from each leg, from each route
+     */
+
+        const lat_lngArray = result["routes"]
+            .map((route) =>
+                route["legs"].map((leg) =>
+                    leg["steps"].map((step) =>
+                        step["lat_lngs"].filter((info, i) => i % 100 === 0)
+                    )
+                )
+            )
+            .flat(3);
+        return lat_lngArray;
     }
 
     const retrieveRoute = (route) => {
@@ -621,7 +650,7 @@ export default function Map() {
                             routeString
                         );
 
-                        const lat_lngArray = routeLegsArray
+                        const latlngArray = routeLegsArray
                             .map((leg) =>
                                 leg[0]["steps"].map((step) =>
                                     step["lat_lngs"].filter(
@@ -630,7 +659,9 @@ export default function Map() {
                                 )
                             )
                             .flat(2);
-                        console.log(routeLegsArray);
+
+                        setLat_LngArray(latlngArray);
+
                         const partialData = calculatePartialStats(
                             routeLegsArray,
                             transportMode
@@ -665,6 +696,7 @@ export default function Map() {
                         directionsOverview.innerHTML = `${routeString}`;
                         directionsPanel.innerHTML = `<h1>${routeString}</h1>`;
 
+                        setLat_LngArray(getLat_LngArray(result));
                         const partialData = calculatePartialStats(
                             result["routes"][0]["legs"],
                             transportMode
@@ -704,6 +736,7 @@ export default function Map() {
                     directionsOverview.innerHTML = `${routeString}`;
                     directionsPanel.innerHTML = `<h1>${routeString}</h1>`;
 
+                    setLat_LngArray(getLat_LngArray(result));
                     const partialData = calculatePartialStats(
                         result["routes"][0]["legs"],
                         transportMode
@@ -848,7 +881,7 @@ export default function Map() {
                         <div className='h-full font-bodyfont basis-3/12 flex items-center '> {/* start to end section */}
                             <div className='h-fit'>
                                 <div id="directionsPanel" className="hidden"></div>
-                                <p id="directionsOverview" className="text-sm text-eggshell"></p>
+                                <p id="directionsOverview" className="text-xs text-eggshell"></p>
                                 <p className='underline text-eggshell cursor-pointer text-sm'>Show Directions</p>
                             </div>
 
@@ -865,13 +898,79 @@ export default function Map() {
 
 
 
-                {/*<div className="flex flex-col justify-between pt-4 pb-8 my-4 mr-2 z-99 fixed place-self-start h-screen fixed right-0"
-                z-99 fixed bg-gray w-4/5 place-self-end rounded-md text-eggshell flex place-content-center items-center mr-16 p-4>*/}
-                <div className='font-bodyfont z-99 fixed right-0 mt-4 mr-12'>
-                    <button className='max-w-fit max-h-fit bg-gray rounded-xl text-eggshell py-1.5 px-4'>Show Nearby Attractions</button>
+
+                <div className='font-bodyfont z-99 fixed right-0 mt-4 mr-12 flex items-start h-14'>
+                    <div className="w-64 flex flex-col justify-center items-center">
+                        <button onClick={(e) => handleAttractionsDropdown(e)} className='w-full max-h-fit bg-gray hover:bg-green rounded-xl text-eggshell py-1.5 px-4'>Show Nearby Attractions</button>
+                        {(isAttractionsDropdownOpen) ? <div className='w-full bg-gray py-1.5 px-4 mt-2 rounded-xl opacity-80 text-eggshell'>
+                            <form className="flex flex-col text-sm">
+                                <div className="flex gap-2 items-center">
+                                    <label>Water Activities</label>
+                                    <input className="category" name="Water Activities" type="checkbox" />
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                    <label>SAFRA Centres</label>
+                                    <input className="category" name="SAFRA Centres" type="checkbox" />
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                    <label>Food</label>
+                                    <input className="category" name="Food" type="checkbox" />
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                    <label>Monuments</label>
+                                    <input className="category" name="Monuments" type="checkbox" />
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                    <label>Museums</label>
+                                    <input className="category" name="Museums" type="checkbox" />
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                    <label>Skyrise Greenery</label>
+                                    <input className="category" name="Skyrise Greenery" type="checkbox" />
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                    <label>Museums</label>
+                                    <input className="category" name="Museums" type="checkbox" />
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                    <label>Tourist Attractions</label>
+                                    <input className="category" name="Tourist Attractions" type="checkbox" />
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                    <label>Historic Sites</label>
+                                    <input className="category" name="Historic Sites" type="checkbox" />
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                    <label>Park</label>
+                                    <input className="category" name="Park" type="checkbox" />
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                    <label>Green Mark Buildings</label>
+                                    <input className="category" name="Green Mark Buildings" type="checkbox" />
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                    <label>Rent Bicycles</label>
+                                    <input className="category" name="Rent Bicycles" type="checkbox" />
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                    <label>Sustainable Hotels</label>
+                                    <input className="category" name="Sustainable Hotels" type="checkbox" />
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                    <label>Shell Recharge/Greenlots (EV)</label>
+                                    <input className="category" name="Shell Recharge/Greenlots (EV)" type="checkbox" />
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                    <label>BlueSG (EV)</label>
+                                    <input className="category" name="BlueSG (EV)" type="checkbox" />
+                                </div>
+                            </form>
+                        </div> : <></>}
+                    </div>
+
                     {(!user) ?
-                        <Link href="/login"><button className='max-w-fit max-h-fit bg-gray rounded-xl text-eggshell py-1.5 px-4 mx-3 hover:bg-green'><LogoutIcon className='mr-1' />Login</button></Link> :
-                        <button onClick={() => handleLogout()} className='max-w-fit max-h-fit bg-gray rounded-xl text-eggshell py-1.5 px-4 mx-3 hover:bg-green'><LogoutIcon className='mr-1' />Logout</button>
+                        <Link href="/login"><button className='max-w-fit bg-gray rounded-xl text-eggshell py-1.5 px-4 mx-3 hover:bg-green'><LogoutIcon className='mr-1' />Login</button></Link> :
+                        <button onClick={(e) => handleLogout(e)} className='max-w-fit bg-gray rounded-xl text-eggshell py-1.5 px-4 mx-3 hover:bg-green'><LogoutIcon className='mr-1' />Logout</button>
                     }
                     <InfoIcon className='text-gray text-3xl mx-3' />
                 </div>
