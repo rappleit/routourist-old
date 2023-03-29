@@ -1,11 +1,6 @@
-// markers css
-// nodejs, split into modules
-
-// Requests using more than 10 waypoints, or waypoint optimization, are billed at a higher rate
+// nodejs, split into modules+cleanup, markers once data, essay
 
 // https://webninjadeveloper.com/javascript/javascript-google-directions-api-example-to-display-routes-between-two-locations-in-google-maps/
-// https://developers.google.com/maps/documentation/javascript/directions
-// https://developers.google.com/maps/documentation/javascript/markers
 var map;
 var directionsService;
 var placesSearch;
@@ -20,12 +15,17 @@ const firstToBox = document.querySelector(".waypoints");
 const addWaypointBox = document.querySelector("#addWaypoint");
 const transportModeBox = document.querySelector("#transportMode");
 const directionsPanel = document.querySelector("#directionsPanel");
-const compareCarbonFootprintPanel = document.querySelector(
-    "#compareCarbonFootprintPanel"
-);
+const statsPanel = document.querySelector("#statsPanel");
 
 function initMap() {
-    // Map Styling: https://mapstyle.withgoogle.com/
+    /**
+     * Initializes the Google Map, adds event listener for click event,
+     * initializes the DirectionsService and Autocomplete objects for the source and destination inputs, and initializes the PlacesService
+     *
+     * Note:
+     * Map Styling: https://mapstyle.withgoogle.com/
+     * For custom marker images, add {suppressMarkers:true}, https://thewebstorebyg.wordpress.com/2013/01/11/custom-directions-panel-with-google-maps-api-v3/
+     */
     map = new google.maps.Map(document.querySelector("#map"), {
         center: {lat: 1.3521, lng: 103.8198},
         zoom: 12,
@@ -35,7 +35,6 @@ function initMap() {
         this.setOptions({scrollwheel: true});
     });
     directionsService = new google.maps.DirectionsService();
-    // For custom marker images, add {suppressMarkers:true}, https://thewebstorebyg.wordpress.com/2013/01/11/custom-directions-panel-with-google-maps-api-v3/
 
     const sourceAutocomplete = new google.maps.places.Autocomplete(
         document.querySelector("#from"),
@@ -52,6 +51,9 @@ function initMap() {
 let waypointsNum = 1;
 
 function addWaypoint() {
+    /**
+     * Increases the number of waypoints, adds an input field for the new waypoint and sets up the corressponding autocomplete for the new input field
+     */
     waypointsNum++;
     const input = document.createElement("input");
     input.setAttribute("class", "to");
@@ -76,6 +78,12 @@ function addWaypoint() {
 }
 
 function calcRoute() {
+    /**
+     * Calculates a route based on the user's input, then calls retrieveRoute to retrieve and display the route on the map
+     * @returns {void}
+     *
+     * Note: // Requests using more than 10 waypoints, or waypoint optimization, are billed at a higher rate
+     */
     const from = document.querySelector("#from").value;
     const waypoints = Array.from(document.querySelectorAll(".to")).map(
         (waypoint) => waypoint.value
@@ -103,7 +111,10 @@ function calcRoute() {
 }
 
 function clearMap() {
-    // Clear markers & polylines
+    /**
+     * Clears all markers and polylines from the map
+     * @returns {void}
+     */
     if (markersPolylines.length > 0) {
         for (let i = 0; i < markersPolylines.length; i++) {
             if (markersPolylines[i] != null) {
@@ -121,8 +132,15 @@ function clearMap() {
 }
 
 function saveRoute(userID, request, routeString) {
-    // Save Route to DB here
-    // routeString is saved also, so as to fast display to user what's it's set to on SavedRoutes page. If no need, don't save since its regenerated in retrieveRoute anyway
+    /**
+     * Saves a route to the database
+     * @param {string} userID - ID of user saving the route
+     * @param {string} request - Request associated with the route being saved
+     * @param {string} routeString - Route string to be saved to the database
+     * @returns {void}
+     *
+     * Note: routeString is saved also, so as to fast display to user what's it's set to on SavedRoutes page. If no need, don't save since its regenerated in retrieveRoute anyway
+     */
     const user = {
         userID: userID,
         request: request,
@@ -132,6 +150,19 @@ function saveRoute(userID, request, routeString) {
 }
 
 function retrieveRoute(user) {
+    /**
+     * Creates retrieves route from the database based on the user object, specific to a user
+     * Retrieves the route using the Google Maps Directions API, and sets the directions on the map
+     * It also displays the route string on the directions panel, and performs a nearby place search for places of interest based on the categories selected by the user and within the specified radius
+     * It calculates the carbon footprint and duration of the trip, and displays the stats on the page
+     *
+     * As transit inherently does not allow for > 1 destination, and therefore no optimization of routes, the following implementation serves to solve the issue
+     * However, resulting routes and directions are displayed as such since there is no way to insert and render it in the way of the directionsRenderer object
+     *
+     * @param {Object} user - An object containing information about the user, including their ID, selected categories, and radius, as well as the request object containing the origin, destination, waypoints, travel mode, and whether the route is optimized.
+     * @returns {void}
+     */
+
     // Retrieve from DB
     const from = user["request"]["origin"];
     const waypoints = user["request"]["waypoints"];
@@ -142,17 +173,18 @@ function retrieveRoute(user) {
     const radius = user["radius"];
     const REQUEST = user["request"];
     let carbonFootprintCount = 0;
+    let duration = 0;
 
     clearMap();
     const directionsRenderer = new google.maps.DirectionsRenderer();
 
     directionsRenderer.setMap(map);
-    // 1) Textual display of directions
+    // Textual display of directions
     directionsRenderer.setPanel(directionsPanel);
     markersPolylines.push(directionsRenderer);
 
     if (transportMode === "TRANSIT") {
-        let routeString = `Optimal route for ${transportMode}: <br>`;
+        let routeString = `Route for ${transportMode}: <br>`;
 
         if (waypoints.length > 1) {
             if (optimizeRoute) {
@@ -208,8 +240,6 @@ function retrieveRoute(user) {
                             // Specifying order within array guarantees resolved promises will be slotted in that order.
                             encodedRoutePolylineArray[i] =
                                 result["routes"][0]["overview_polyline"];
-                            console.log("IN ORIGINAL");
-                            console.log(result["routes"][0]["legs"]);
                             routeLegsArray[i] = result["routes"][0]["legs"];
                         } else {
                             directionsPanel.innerHTML = `<h1>${request["origin"]} -> ${request["destination"]} failed with a status of ${status}</h1>`;
@@ -248,13 +278,13 @@ function retrieveRoute(user) {
                         .flat(2);
                     nearbyPlaceSearch(lat_lngArray, categoriesChecked, radius);
                     console.log(routeLegsArray);
-                    carbonFootprintCount += calculatePartialCarbonFootprint(
-                        routeLegsArray.map((leg) => leg[0]["steps"])[0]
+                    const partialData = calculatePartialStats(
+                        routeLegsArray,
+                        transportMode
                     );
-                    calculateTotalCarbonFootprint(
-                        REQUEST,
-                        carbonFootprintCount
-                    );
+                    carbonFootprintCount += partialData[0];
+                    duration += partialData[1];
+                    calculateStats(REQUEST, carbonFootprintCount, duration);
 
                     // saveRoute(user["userID"], user["request"], routeString);
                 }, 500);
@@ -287,16 +317,13 @@ function retrieveRoute(user) {
                         categoriesChecked,
                         radius
                     );
-
-                    carbonFootprintCount += calculatePartialCarbonFootprint(
-                        result["routes"][0]["legs"].map(
-                            (leg) => leg["steps"]
-                        )[0]
+                    const partialData = calculatePartialStats(
+                        result["routes"][0]["legs"],
+                        transportMode
                     );
-                    calculateTotalCarbonFootprint(
-                        REQUEST,
-                        carbonFootprintCount
-                    );
+                    carbonFootprintCount += partialData[0];
+                    duration += partialData[1];
+                    calculateStats(REQUEST, carbonFootprintCount, duration);
 
                     // saveRoute(user["userID"], user["request"], routeString);
                 } else {
@@ -324,7 +351,7 @@ function retrieveRoute(user) {
             if (status === "OK") {
                 directionsRenderer.setDirections(result);
                 let routeString =
-                    `Optimal route for ${transportMode}: <br>` +
+                    `Route for ${transportMode}: <br>` +
                     createRouteString(result, waypoints);
 
                 directionsPanel.innerHTML = `<h1>${routeString}</h1>`;
@@ -334,11 +361,13 @@ function retrieveRoute(user) {
                     categoriesChecked,
                     radius
                 );
-                console.log(result);
-                carbonFootprintCount += calculatePartialCarbonFootprint(
-                    result["routes"][0]["legs"].map((leg) => leg["steps"])[0]
+                const partialData = calculatePartialStats(
+                    result["routes"][0]["legs"],
+                    transportMode
                 );
-                calculateTotalCarbonFootprint(REQUEST, carbonFootprintCount);
+                carbonFootprintCount += partialData[0];
+                duration += partialData[1];
+                calculateStats(REQUEST, carbonFootprintCount, duration);
 
                 // saveRoute(user["userID"], user["request"], routeString);
             } else {
@@ -349,9 +378,20 @@ function retrieveRoute(user) {
 }
 
 function createMarker(details) {
-    // background: result[i]["icon_background_color"]
-    // glyph: new URL(`${result[i]["icon_mask_base_uri"]}.png`)
-    // May configure collisionBehaviour + zoomBehaviour
+    /**
+     * Creates advanced marker on the map
+     * @param {object} details - Details of the marker to be created
+     * @param {google.maps.LatLngLiteral} details.position - Position of the marker on the map
+     * @param {string} details.title - Title of the marker
+     * @param {HTMLElement} details.content - HTML content of the marker
+     * @param {google.maps.Map} map - Map on which to place the marker
+     * @returns {void}
+     *
+     * Note: background: result[i]["icon_background_color"]
+     *       glyph: new URL(`${result[i]["icon_mask_base_uri"]}.png`)
+     *       May configure collisionBehaviour + zoomBehaviour
+     */
+
     const advancedMarkerView = new google.maps.marker.AdvancedMarkerView({
         position: details["position"],
         title: details["title"],
@@ -377,8 +417,19 @@ function createMarker(details) {
 }
 
 function buildContent(property) {
-    // https://developers.google.com/maps/documentation/javascript/advanced-markers/html-markers#maps_advanced_markers_html-javascript
-    // https://fontawesome.com/search
+    /**
+     * Creates HTML content for a marker, displaying the name, address, rating, user ratings total, and price level of the associated place
+     * @param {Object} property - Object containing the properties of the place to be displayed
+     * @param {string} property.type - Type of the place
+     * @param {string} property.name - Name of the place
+     * @param {string} [property.formatted_address] - Formatted address of the place
+     * @param {number} property.rating - Rating of the place
+     * @param {number} property.user_ratings_total - Total number of user ratings of the place
+     * @param {number} [property.price_level] - Price level of the place (from 1 to 4)
+     * @returns {Element} - Div element containing the HTML content for the marker
+     *
+     * References: https://developers.google.com/maps/documentation/javascript/advanced-markers/html-markers#maps_advanced_markers_html-javascript, https://fontawesome.com/search
+     */
     const content = document.createElement("div");
 
     content.classList.add("property");
@@ -421,17 +472,32 @@ function buildContent(property) {
 }
 
 function highlight(markerView) {
+    /**
+     * Highlights a marker by adding the 'highlight' class to its content element and setting its z-index to 1
+     * @param {object} markerView - The marker to highlight
+     */
     markerView.content.classList.add("highlight");
     markerView.element.style.zIndex = 1;
 }
 
 function unhighlight(markerView) {
+    /**
+     * Removes the highlight from marker by removing the 'highlight' class from its content element and resetting its z-index to the default value
+     * @param {object} markerView - The marker to unhighlight
+     */
     markerView.content.classList.remove("highlight");
     markerView.element.style.zIndex = "";
 }
 
 function getLat_LngArray(result) {
-    // i % 100 takes every 100th lat_lng from each step, from each leg, from each route
+    /**
+     * Returns array of latitudes and longitudes from the given Google Maps Directions API result object
+     * @param {Object} result - Result object returned by the Google Maps Directions API
+     * @returns {Array} Array of latitudes and longitudes from the result object
+     *
+     * Eg. i % 100 takes every 100th lat_lng from each step, from each leg, from each route
+     */
+
     const lat_lngArray = result["routes"]
         .map((route) =>
             route["legs"].map((leg) =>
@@ -441,11 +507,17 @@ function getLat_LngArray(result) {
             )
         )
         .flat(3);
-    console.log(lat_lngArray);
     return lat_lngArray;
 }
 
 function nearbyPlaceSearch(lat_lngArray, categoriesChecked, radius) {
+    /**
+     * Searches for nearby places based on the given latitude-longitude pairs and categories
+     * @param {Array} lat_lngArray - Array of latitude-longitude pairs to search
+     * @param {Array} categoriesChecked - Array of categories to search for
+     * @param {Number} radius - Radius (in kilometers) around each latitude-longitude pair to search within
+     * @returns {void}
+     */
     for (lat_lng of lat_lngArray) {
         for (source of allData) {
             for (const [theme, themePlace] of Object.entries(source)) {
@@ -475,6 +547,13 @@ function nearbyPlaceSearch(lat_lngArray, categoriesChecked, radius) {
 }
 
 function nearbyGoogleAPIPlaceSearch(result) {
+    /**
+     * Searches for nearby Google Places of the specified type along the given route
+     * @param {Object} result - The result object returned by the Directions API
+     *
+     * References: https://developers.google.com/maps/documentation/javascript/supported_types
+     * Useful types: amusement_park, bicycle_store, cafe, clothing_store, gym, lodging, movie_theater, museum, night_club, park, restaurant, shopping_mall, spa, tourist_attraction, zoo
+     */
     let lat_lngArray = result["routes"]
         .map((route) =>
             route["legs"].map((leg) =>
@@ -493,8 +572,7 @@ function nearbyGoogleAPIPlaceSearch(result) {
             type: "museum",
             region: "SG",
         };
-        // https://developers.google.com/maps/documentation/javascript/supported_types
-        // amusement_park, bicycle_store, cafe, clothing_store, gym, lodging, movie_theater, museum, night_club, park, restaurant, shopping_mall, spa, tourist_attraction, zoo
+
         placesSearch.textSearch(request, function (result, status) {
             if (status === "OK") {
                 for (let i = 0; i < result.length; i++) {
@@ -510,6 +588,13 @@ function nearbyGoogleAPIPlaceSearch(result) {
 }
 
 function createRouteString(result, waypoints) {
+    /**
+     * Generates a string representation of a route based on the provided result and waypoints
+     * @param {object} result - Result object from a Google Maps Directions API request
+     * @param {string[]} waypoints - Array of string waypoints in the route
+     * @returns {string} String representation of the route
+     */
+
     const from = result["routes"][0]["legs"][0]["start_address"];
     const fromSplit = from.split(",");
     // Formatting name
@@ -549,6 +634,12 @@ function drawTransitRoute(
     routeLegsArray,
     routeString
 ) {
+    /**
+     * Draws transit route on the Google Map and displays the route directions in the directionsPanel
+     * @param {Array} encodedRoutePolylineArray - Array of encoded polylines representing the route segments
+     * @param {Array} routeLegsArray - Array of objects representing the legs of the route
+     * @param {string} routeString - A string representing the route directions
+     */
     const routeStringSplit = routeString
         .split(": <br>")[1]
         .trim()
@@ -677,8 +768,12 @@ function drawTransitRoute(
 }
 
 function haversine_distance(pt1, pt2) {
-    // Spherical trigonometry to determine the great circle distance between two points in km
-    // pt1 is origin, pt2 is point of interest
+    /**
+     * Calculates the great circle distance between two points using spherical trigonometry
+     * @param {Object} pt1 - Coordinates of the origin point as an object with 'lat' and 'lng' properties/functions
+     * @param {Object} pt2 - Coordinates of the point of interest as an object with 'lat' and 'lng' properties
+     * @returns {number} Distance between the two points rounded to two decimal places, in kilometers
+     */
     const R = 6371.071;
     const rlat1 = pt1.lat() * (Math.PI / 180);
     const rlat2 = pt2["lat"] * (Math.PI / 180);
@@ -1511,11 +1606,18 @@ function retrieveBlueSGData() {
     // Retrieve from DB
 }
 
-// https://membership.bluesg.com.sg/stations/
-// https://socket.dev/npm/package/bluesg-api, "npm i form-data", const FormData = require("form-data") in node_modules>bluesg-api>dist>index.js
-
 // const BlueSGApi = require("bluesg-api");
 async function saveBlueSGData() {
+    /**
+     * Saves BlueSG station data to a database
+     * @async
+     * @function saveBlueSGData
+     * @throws {Error} If unable to get a token or stations data
+     * @returns {void} Saves data to DB
+     *
+     * References: https://membership.bluesg.com.sg/stations/, https://socket.dev/npm/package/bluesg-api
+     * Guide: "npm i form-data", const FormData = require("form-data") in node_modules>bluesg-api>dist>index.js
+     */
     const data = {};
     data["BlueSG (EV)"] = [];
 
@@ -1561,6 +1663,11 @@ function retrieveResearchedData() {
 }
 
 function saveResearchedData() {
+    /**
+     * Saves self-researched data on bicycle rentals, sustainable hotels, and electric vehicle stations to a data object
+     * @returns {Object} The data object containing researched data on bicycle rentals, sustainable hotels, and electric vehicle stations
+     */
+
     const data = {};
     // https://thesmartlocal.com/read/bicycle-rental-singapore/
     const bicycleRentals = {
@@ -1660,6 +1767,13 @@ function saveResearchedData() {
 }
 
 function searchData(dataObject, content) {
+    /**
+     * Searches for location data based on postal codes in a given data object
+     * @param {Object} dataObject - Object containing location data, where each key is the location name and the value is an array of postal codes for that location
+     * @param {Object} content - Object containing additional information about the location
+     * @returns {Array} Array of location data objects, where each object contains information about the location, such as name, address, type, URL, rating, reviews, and price level
+     */
+
     const data = [];
     const totalEntryCount = Object.values(dataObject).reduce(
         (total, current) => total + current.length,
@@ -1713,10 +1827,18 @@ function searchData(dataObject, content) {
     return data;
 }
 
-function calculatePartialCarbonFootprint(routeSteps) {
-    // https://www.bikeradar.com/features/long-reads/cycling-environmental-impact/, https://www.eco-business.com/news/singapores-mrt-lines-be-graded-green-ness/
+function calculatePartialStats(routeLegsArray, transportMode) {
+    /**
+     *Calculates the carbon footprint and duration of a given route
+     *@param {Array} routeLegsArray Array of objects representing the legs of the route
+     *@param {string} transportMode A string representing the mode of transport for the route
+     *@returns {Array} Array containing the total carbon footprint (in kg CO2 equivalent) and the duration (in seconds) of the route
+     *
+     *References: https://www.bikeradar.com/features/long-reads/cycling-environmental-impact/, https://www.eco-business.com/news/singapores-mrt-lines-be-graded-green-ness/
+     */
+
     // Carbon footprint in kg CO2 equivalent per (passenger km)
-    const carbonFootprintPer = {
+    const carbonFootprintBase = {
         "Conventional Car": 0.271,
         "Electric Car": 0.09,
         Bus: 0.051,
@@ -1726,39 +1848,77 @@ function calculatePartialCarbonFootprint(routeSteps) {
         Walk: 0.056,
     };
     let carbonFootprintCount = 0;
-    routeSteps.forEach((step) => {
-        let mode = step["instructions"].split(" ");
-        let travel_mode = step["travel_mode"];
-        let stepMode =
-            travel_mode === "DRIVING"
+    let duration = 0;
+
+    if (transportMode === "TRANSIT") {
+        if (routeLegsArray.length > 1) {
+            routeLegsArray = routeLegsArray.map((leg) => leg[0]);
+        }
+
+        duration += routeLegsArray
+            .map((leg) => leg["duration"]["value"])
+            .reduce((total, current) => total + current, 0);
+
+        routeLegsArray
+            .map((leg) => leg["steps"])
+            .forEach((routeStep) => {
+                routeStep.forEach((step) => {
+                    let mode = step["instructions"]
+                        ? step["instructions"].split(" ")[0]
+                        : "Walk";
+
+                    const stepMode =
+                        mode === "Subway" || mode === "Tram"
+                            ? "MRT"
+                            : mode === "Bus"
+                            ? "Bus"
+                            : "Walk";
+                    carbonFootprintCount +=
+                        carbonFootprintBase[stepMode] *
+                        (step["distance"]["value"] / 1000);
+                });
+            });
+    } else {
+        duration += routeLegsArray
+            .map((leg) => leg["duration"]["value"])
+            .reduce((total, current) => total + current, 0);
+        const routeDistance = routeLegsArray
+            .map((leg) => leg["distance"]["value"])
+            .reduce((total, current) => total + current, 0);
+        const stepMode =
+            transportMode === "DRIVING"
                 ? "Conventional Car"
-                : travel_mode === "BICYCLING"
+                : transportMode === "BICYCLING"
                 ? "Conventional Bicycle"
-                : mode[0] === "Subway"
-                ? "MRT"
-                : mode[0] === "Bus"
-                ? "Bus"
                 : "Walk";
         carbonFootprintCount +=
-            carbonFootprintPer[stepMode] * (step["distance"]["value"] / 1000);
-    });
-    console.log(carbonFootprintCount);
-    return carbonFootprintCount;
+            carbonFootprintBase[stepMode] * (routeDistance / 1000);
+    }
+
+    // console.log(`${transportMode}: ${carbonFootprintCount}, ${secondsToHms(duration)}`);
+    return [carbonFootprintCount, duration];
 }
 
-function calculateTotalCarbonFootprint(request, carbonFootprintCount) {
-    // Stats: ((distance without optimisation) - (distance with optimisation) ) x (rs between distance and carbon footprint depending on mode of transport)
-
-    // "Optimize for less time", "Perhaps you'd like to expand your search radius and look for more sustainable options?"
+function calculateStats(request, carbonFootprintCount, duration) {
+    /**
+     * Calculates carbon footprint and duration for a given travel request and mode of transport
+     * @param {object} request - Travel request object containing origin, waypoints, optimizeWaypoints, and travelMode properties
+     * @param {number} carbonFootprintCount - Total carbon footprint in kg CO2 equivalent emitted for the given travel request
+     * @param {number} duration - Total duration for the given travel request, in seconds
+     * @returns {void} Does not return anything, but updates the statsPanel with comparison data between the given travel request's transport mode and all other modes of transport
+     *
+     * Intention: Carbon footprint depending on mode of transport and their cumulative distance + Time as a tradeoff to make informed decisions
+     */
 
     const from = request["origin"];
     const waypoints = request["waypoints"];
     const optimizeRoute = request["optimizeWaypoints"];
     const transportMode = request["travelMode"];
 
-    let carbonFootprintString = `For ${transportMode}: ${carbonFootprintCount.toFixed(
+    const outputStringArray = [];
+    outputStringArray[0] = `Through your ${transportMode} journey, ${carbonFootprintCount.toFixed(
         2
-    )} kg CO2e/(passenger km)<br>`;
+    )} kg CO2e is emitted, taking ${secondsToHms(duration)}<br>`;
     const otherTravelModes = [
         "DRIVING",
         "TRANSIT",
@@ -1766,11 +1926,12 @@ function calculateTotalCarbonFootprint(request, carbonFootprintCount) {
         "BICYCLING",
     ].filter((mode) => mode !== transportMode);
 
-    for (otherTravelMode of otherTravelModes) {
-        carbonFootprintString += `For ${otherTravelMode}: `;
+    for (let i = 0; i < otherTravelModes.length; i++) {
+        let otherDuration = 0;
         let otherCarbonFootprintCount = 0;
+        outputStringArray[i + 1] = `${otherTravelModes[i]} `;
 
-        if (otherTravelMode === "TRANSIT") {
+        if (otherTravelModes[i] === "TRANSIT") {
             if (waypoints.length > 1) {
                 if (optimizeRoute) {
                     request = {
@@ -1801,14 +1962,14 @@ function calculateTotalCarbonFootprint(request, carbonFootprintCount) {
                         }
                     });
                 }
-
                 setTimeout(() => {
                     waypoints.unshift(from);
-                    for (let i = 0; i < waypoints.length - 1; i++) {
+                    const routeLegsArray = [];
+                    for (let j = 0; j < waypoints.length - 1; j++) {
                         request = {
-                            origin: waypoints[i],
-                            destination: waypoints[i + 1],
-                            travelMode: otherTravelMode,
+                            origin: waypoints[j],
+                            destination: waypoints[j + 1],
+                            travelMode: "TRANSIT",
                             optimizeWaypoints: optimizeRoute,
                             unitSystem: google.maps.UnitSystem.METRIC,
                             region: "SG",
@@ -1818,39 +1979,53 @@ function calculateTotalCarbonFootprint(request, carbonFootprintCount) {
                             request,
                             function (result, status) {
                                 if (status === "OK") {
-                                    otherCarbonFootprintCount +=
-                                        calculatePartialCarbonFootprint(
-                                            result["routes"][0]["legs"][0][
-                                                "steps"
-                                            ]
-                                        );
-                                    carbonFootprintString += `${otherCarbonFootprintCount.toFixed(
-                                        2
-                                    )} kg CO2e/(passenger km)<br>`;
+                                    routeLegsArray[j] =
+                                        result["routes"][0]["legs"];
                                 }
                             }
                         );
                     }
+                    setTimeout(() => {
+                        const partialData = calculatePartialStats(
+                            routeLegsArray,
+                            "TRANSIT"
+                        );
+                        otherCarbonFootprintCount += partialData[0];
+                        otherDuration += partialData[1];
+                        outputStringArray[i + 1] = compareStats(
+                            carbonFootprintCount,
+                            otherCarbonFootprintCount,
+                            duration,
+                            otherDuration,
+                            outputStringArray[i + 1]
+                        );
+                    }, 500);
                 }, 500);
             } else {
                 request = {
                     origin: from,
                     destination: waypoints[waypoints.length - 1],
                     waypoints: [],
-                    travelMode: otherTravelMode,
+                    travelMode: otherTravelModes[i],
                     optimizeWaypoints: optimizeRoute,
                     unitSystem: google.maps.UnitSystem.METRIC,
                     region: "SG",
                 };
                 directionsService.route(request, function (result, status) {
                     if (status === "OK") {
-                        otherCarbonFootprintCount +=
-                            calculatePartialCarbonFootprint(
-                                result["routes"][0]["legs"][0]["steps"]
-                            );
-                        carbonFootprintString += `${otherCarbonFootprintCount.toFixed(
-                            2
-                        )} kg CO2e/(passenger km)<br>`;
+                        const partialData = calculatePartialStats(
+                            result["routes"][0]["legs"],
+                            otherTravelModes[i]
+                        );
+                        otherCarbonFootprintCount += partialData[0];
+                        otherDuration += partialData[1];
+                        outputStringArray[i + 1] = compareStats(
+                            carbonFootprintCount,
+                            otherCarbonFootprintCount,
+                            duration,
+                            otherDuration,
+                            outputStringArray[i + 1]
+                        );
                     }
                 });
             }
@@ -1866,34 +2041,94 @@ function calculateTotalCarbonFootprint(request, carbonFootprintCount) {
                             stopover: true,
                         };
                     }),
-                travelMode: otherTravelMode,
+                travelMode: otherTravelModes[i],
                 optimizeWaypoints: optimizeRoute,
                 unitSystem: google.maps.UnitSystem.METRIC,
                 region: "SG",
             };
             directionsService.route(request, async function (result, status) {
                 if (status === "OK") {
-                    console.log("IN CARBON FOOTPRINT");
-                    console.log(result["routes"][0]["legs"]);
-                    setTimeout(() => {
-                        otherCarbonFootprintCount +=
-                            calculatePartialCarbonFootprint();
-                        result["routes"][0]["legs"][0]["steps"];
-
-                        carbonFootprintString += `${otherCarbonFootprintCount.toFixed(
-                            2
-                        )} kg CO2e/(passenger km)<br>`;
-                    }, 500);
+                    const partialData = calculatePartialStats(
+                        result["routes"][0]["legs"],
+                        otherTravelModes[i]
+                    );
+                    otherCarbonFootprintCount += partialData[0];
+                    otherDuration += partialData[1];
+                    outputStringArray[i + 1] = compareStats(
+                        carbonFootprintCount,
+                        otherCarbonFootprintCount,
+                        duration,
+                        otherDuration,
+                        outputStringArray[i + 1]
+                    );
                 }
             });
         }
         setTimeout(() => {
-            compareCarbonFootprintPanel.innerHTML = carbonFootprintString;
-        }, 500);
-        // if (!optimizeRoute) {
-        //     console.log(
-        //         "With your non-optimized route, ... Optimize route now!"
-        //     );
-        // }
+            statsPanel.innerHTML = outputStringArray.join("");
+            if (!optimizeRoute) {
+                statsPanel.innerHTML += `<br>Optimize your route now for greater efficiency!<br> Or perhaps you'd like to expand your search radius and look for more sustainable options?`;
+            }
+        }, 1000);
     }
+}
+
+function compareStats(
+    carbonFootprintCount,
+    otherCarbonFootprintCount,
+    duration,
+    otherDuration,
+    outputString
+) {
+    /**
+     *Compares statistics (carbon footprint and duration of journey) of user's inputted mode of transport with all other modes of transport
+     *indicating the percentage difference in emissions and the difference in time.
+     *@param {number} carbonFootprintCount - Carbon footprint count to compare with
+     *@param {number} otherCarbonFootprintCount - Other carbon footprint count to compare with
+     *@param {number} duration - duration to compare with
+     *@param {number} otherDuration - Other duration to compare with
+     *@param {string} outputString - Output string to append the comparison results
+     *@returns {string} Output string indicating the percentage difference in carbon footprint and the difference in time of journey
+     */
+    if (otherCarbonFootprintCount > carbonFootprintCount) {
+        const percentDiff = (
+            ((otherCarbonFootprintCount - carbonFootprintCount) /
+                carbonFootprintCount) *
+            100
+        ).toFixed(0);
+        outputString += `⬆️ ${percentDiff}% emissions, `;
+    } else {
+        const percentDiff = (
+            ((carbonFootprintCount - otherCarbonFootprintCount) /
+                carbonFootprintCount) *
+            100
+        ).toFixed(0);
+        outputString += `⬇️${percentDiff}% emissions, `;
+    }
+
+    if (duration > otherDuration) {
+        const timeDiff = secondsToHms(duration - otherDuration);
+        outputString += `⬇️ ${timeDiff}<br>`;
+    } else {
+        const timeDiff = secondsToHms(otherDuration - duration);
+        outputString += `⬆️${timeDiff}<br>`;
+    }
+    return outputString;
+}
+
+function secondsToHms(d) {
+    /**
+     *Converts seconds into hours, minutes, seconds format
+     *@param {number} d - Seconds to convert
+     *@returns {string} Converted time in the specified hours, minutes, seconds format
+     */
+    d = Number(d);
+    var h = Math.floor(d / 3600);
+    var m = Math.floor((d % 3600) / 60);
+    var s = Math.floor((d % 3600) % 60);
+    // Initial: 5 hours, 16 minutes, 41 seconds
+    var hDisplay = h > 0 ? h + (h == 1 ? " hr " : " hrs ") : "";
+    var mDisplay = m > 0 ? m + (m == 1 ? " min " : " mins ") : "";
+    var sDisplay = s > 0 ? s + (s == 1 ? " s" : " s") : "";
+    return hDisplay + mDisplay;
 }
