@@ -4,6 +4,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import Link from 'next/link';
 
 export default function Map() {
     return(
@@ -81,7 +82,7 @@ export default function Map() {
                     </div>
 
                     <div className='basis-1/12 flex place-content-center'> {/* my saved routes button */}
-                        <button className='font-bodyfont w-fit h-fit px-10 py-2.5  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button>
+                        <Link href="/savedroutes"><button className='font-bodyfont w-fit h-fit px-10 py-2.5  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button></Link>
                     </div>
 
                 </div>

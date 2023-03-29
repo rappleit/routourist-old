@@ -18,6 +18,7 @@ export const useSignup = () => {
         const json =  await response.json()
 
         if (!response.ok) {
+            console.log('this doesnt work')
             setIsLoading(false)
             setError(json.error)
         } else if (response.ok) {
