@@ -40,7 +40,8 @@ export default function Login() {
                         {error && <p className="text-red-500 font-medium text-center mt-4">{error}</p>}
                     </form>
 
-                    <p>Don`&apos;`t have an account? <Link href="/signup" className="text-darkgreen underline">Sign up here</Link></p>
+                    <p>Don&apos;t have an account? <Link href="/signup" className="text-darkgreen underline">Sign up here</Link></p>
+                    <Link href="/map" className="text-darkgreen underline my-6">Go to Map</Link>
                 </div>
 
             </div>

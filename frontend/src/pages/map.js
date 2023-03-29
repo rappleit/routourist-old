@@ -4,8 +4,18 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import Link from 'next/link';
+import { useAuthContext } from '@/hooks/useAuthContext';
+import { useLogout } from '@/hooks/useLogout';
 
 export default function Map() {
+    const { user } = useAuthContext()
+    const { logout } = useLogout()
+
+    const handleLogout = () => {
+        logout()
+      }
+
     return(
         <div className="bg-eggshell w-screen h-screen flex justify-between" >
             <div className="bg-gray z-10 h-screen w-1/4 place-self-start">
@@ -81,7 +91,7 @@ export default function Map() {
                     </div>
 
                     <div className='basis-1/12 flex place-content-center'> {/* my saved routes button */}
-                        <button className='font-bodyfont w-fit h-fit px-10 py-2.5  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button>
+                        <Link href={(user) ? "/map" : "/login"}><button className='font-bodyfont w-fit h-fit px-10 py-2.5  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button></Link> 
                     </div>
 
                 </div>
@@ -94,8 +104,11 @@ export default function Map() {
             <div className="flex flex-col justify-between my-4 mr-2">
                 <div className='font-bodyfont'>
                     <button className='max-w-fit max-h-fit bg-gray rounded-xl text-eggshell py-1.5 px-4'>Show Nearby Attractions</button>
+                    { (!user) ?
+                        <Link href="/login"><button className='max-w-fit max-h-fit bg-gray rounded-xl text-eggshell py-1.5 px-4 mx-3 hover:bg-green'><LogoutIcon className='mr-1'/>Login</button></Link>:
+                        <button onClick={()=> handleLogout()} className='max-w-fit max-h-fit bg-gray rounded-xl text-eggshell py-1.5 px-4 mx-3 hover:bg-green'><LogoutIcon className='mr-1'/>Logout</button>
+                        }
                     <InfoIcon className='text-gray text-3xl mx-3'/>
-                    <span className='max-w-fit max-h-fit bg-gray rounded-xl text-eggshell py-1.5 px-4'><LogoutIcon className='mr-1'/>Login/Logout</span>
                 </div>
                 <div className="bg-gray z-10 w-4/5 h-1/6 place-self-end rounded-md text-eggshell flex place-content-center items-center">
                     <div>
