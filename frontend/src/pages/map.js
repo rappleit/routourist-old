@@ -5,15 +5,12 @@ import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import Link from 'next/link';
-<<<<<<< HEAD
-=======
 import { useAuthContext } from '@/hooks/useAuthContext';
 import { useLogout } from '@/hooks/useLogout';
 import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import ReactDOM from 'react-dom';
 
->>>>>>> af939e4bbf7eecc5c25b30c4563c008c2ee7adee
 
 export default function Map() {
     const { user } = useAuthContext()
@@ -865,10 +862,6 @@ export default function Map() {
                                 </select>
                             </div>
 
-<<<<<<< HEAD
-                    <div className='basis-1/12 flex place-content-center'> {/* my saved routes button */}
-                        <Link href="/savedroutes"><button className='font-bodyfont w-fit h-fit px-10 py-2.5  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button></Link>
-=======
                             <div> {/* checkbox */}
                                 <input id="optimizeRouteRef" type="checkbox" name='OptimiseChoice' value="OptimiseChoice"></input>
                                 <label for='OptimiseChoice' className='text-eggshell font-bodyfont ml-3'>Optimise Route</label>
@@ -878,7 +871,7 @@ export default function Map() {
                             <div className='flex place-content-center'> {/* buttons */}
                                 <div>
                                     <button onClick={(e) => calcRoute(e)} className='font-bodyfont w-full max-h-fit bg-green py-2 px-3 rounded-lg drop-shadow-2xl mb-3'>Create Route</button>
-                                    <button className='font-bodyfont w-full max-h-fit bg-eggshell py-2 px-3 rounded-lg drop-shadow-2xl'>Save Route</button>
+                                    <Link href='/savedroutes'><button className='font-bodyfont w-full max-h-fit bg-eggshell py-2 px-3 rounded-lg drop-shadow-2xl'>Save Route</button></Link>
                                 </div>
 
                             </div>
@@ -898,7 +891,6 @@ export default function Map() {
                             <Link href={(user) ? "/map" : "/login"}><button className='font-bodyfont w-fit h-fit px-10 py-2.5  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button></Link>
                         </div>
 
->>>>>>> af939e4bbf7eecc5c25b30c4563c008c2ee7adee
                     </div>
 
                 </div>
