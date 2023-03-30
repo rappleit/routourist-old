@@ -281,8 +281,8 @@ function retrieveRoute(user) {
                     calculateStats(REQUEST, carbonFootprintCount, duration);
 
                     // saveRoute(user["userID"], user["request"], routeString);
-                }, 500);
-            }, 500);
+                }, 750);
+            }, 750);
             // If TRANSIT & =2
         } else {
             request = {
@@ -1231,8 +1231,8 @@ function calculateStats(request, carbonFootprintCount, duration) {
                             otherDuration,
                             outputStringArray[i + 1]
                         );
-                    }, 500);
-                }, 500);
+                    }, 750);
+                }, 750);
             } else {
                 request = {
                     origin: from,
@@ -1301,7 +1301,7 @@ function calculateStats(request, carbonFootprintCount, duration) {
             if (!optimizeRoute) {
                 statsPanel.innerHTML += `<br>Optimize your route now for greater efficiency!<br> Or perhaps you'd like to expand your search radius and look for more sustainable options?`;
             }
-        }, 1000);
+        }, 2200);
     }
 }
 
