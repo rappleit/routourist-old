@@ -25,11 +25,7 @@ export default function Home() {
                 <div className='ml-8'>examples</div>
               </div>
               <div className='col-span-2 row-span-1 justify-center'>
-<<<<<<< HEAD
-                <Link href=""><button className='font-medium font-bodyfont rounded-full w-20 h-10 bg-gray text-eggshell shadow-md self-center hover:bg-green hover:text-eggshell'>Login</button></Link>
-=======
                 <Link href="/map"><button className='font-medium font-bodyfont rounded-full w-40 py-4 bg-gray text-eggshell shadow-md self-center hover:bg-green hover:text-eggshell'>Try Now!</button></Link>
->>>>>>> af939e4bbf7eecc5c25b30c4563c008c2ee7adee
                 
               </div>
             </div>

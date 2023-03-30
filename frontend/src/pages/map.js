@@ -5,15 +5,12 @@ import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import Link from 'next/link';
-<<<<<<< HEAD
-=======
 import { useAuthContext } from '@/hooks/useAuthContext';
 import { useLogout } from '@/hooks/useLogout';
 import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import ReactDOM from 'react-dom';
 
->>>>>>> af939e4bbf7eecc5c25b30c4563c008c2ee7adee
 
 export default function Map() {
     const { user } = useAuthContext()
@@ -29,10 +26,12 @@ export default function Map() {
     const [gdestAutoComplete, setGDestAutoComplete] = useState(null)
     const [markersPolylines, setMarkersPolylines] = useState([])
     const [lat_lngArray, setLat_LngArray] = useState([])
-    
+
     const [isAttractionsDropdownOpen, setIsAttractionsDropdownOpen] = useState(false)
 
     const [waypointsNum, setWaypointsNum] = useState(2)
+    const [categoriesChecked, setCategoriesChecked] = useState([])
+
 
     const handleLogout = (e) => {
         e.preventDefault();
@@ -44,22 +43,23 @@ export default function Map() {
         setIsAttractionsDropdownOpen(!isAttractionsDropdownOpen)
     }
 
+    const handleCategoryChecked = (e) => {
+
+        if (e.target.checked) {
+            setCategoriesChecked(oldArr => [...oldArr, e.target.name])
+            console.log(categoriesChecked)
+        } else {
+            setCategoriesChecked(categoriesChecked.filter(cat => cat !== e.target.name))
+        }
+
+        console.log(categoriesChecked)
+    }
+
     const addWaypoint = (e) => {
         e.preventDefault();
         if (waypointsNum < 10) {
             setWaypointsNum(waypointsNum + 1)
         }
-
-        /*const waypointsList = document.querySelector("#waypointsList")
-        const inputDiv = document.createElement("div")
-        inputDiv.setAttributeNS(null, "className", "flex")
-        waypointsList.appendChild(inputDiv)
-        const inputField = document.createElement("input")
-        inputField.setAttributeNS(null, "className", "toRef px-3 py-1 border-1 w-11/12 rounded-md")
-        inputField.setAttribute("placeholder", "To where?")
-        inputDiv.appendChild(inputField)*/
-
-
 
     }
 
@@ -72,6 +72,27 @@ export default function Map() {
             }
         }
     }, [waypointsNum])
+
+    const clearMap = () => {
+        /**
+    * Clears all markers and polylines from the map
+    * @returns {void}
+    */
+        if (markersPolylines.length > 0) {
+            for (let i = 0; i < markersPolylines.length; i++) {
+                if (markersPolylines[i] != null) {
+                    try {
+                        // For polyline, since both won't give errors
+                        markersPolylines[i].setMap(null);
+                    } catch (TypeError) {
+                        // For advanced markers
+                        markersPolylines[i].map = null;
+                    }
+                }
+            }
+        }
+        markersPolylines.length = 0;
+    }
 
     const createRouteString = (result, waypoints) => {
         const from = result["routes"][0]["legs"][0]["start_address"];
@@ -260,8 +281,8 @@ export default function Map() {
                                 otherDuration,
                                 outputStringArray[i + 1]
                             );
-                        }, 800);
-                    }, 800);
+                        }, 900);
+                    }, 900);
                 } else {
                     const request = {
                         origin: from,
@@ -330,7 +351,7 @@ export default function Map() {
                 if (!optimizeRoute) {
                     statsPanel.innerHTML += `<p><br>Optimize your route now for greater efficiency!`;
                 }
-            }, 1500);
+            }, 1600);
         }
     }
 
@@ -553,12 +574,12 @@ export default function Map() {
         const transportMode = route["request"]["travelMode"];
         const optimizeRoute = route["request"]["optimizeWaypoints"];
 
-        const categoriesChecked = route["categoriesChecked"];
-        const radius = route["radius"];
         const REQUEST = route["request"];
 
         let carbonFootprintCount = 0;
         let duration = 0;
+
+        clearMap();
 
         const directionsOverview = document.querySelector("#directionsOverview")
         const directionsPanel = document.querySelector("#directionsPanel");
@@ -673,8 +694,8 @@ export default function Map() {
                         duration += partialData[1];
                         calculateStats(REQUEST, carbonFootprintCount, duration);
 
-                    }, 800);
-                }, 800);
+                    }, 900);
+                }, 900);
                 // If TRANSIT & =2
             } else {
                 const request = {
@@ -766,8 +787,7 @@ export default function Map() {
         const transportModeMenu = document.querySelector("#transportModeMenuRef")
         const transportMode = transportModeMenu.value.toUpperCase();
         const optimizeRoute = document.querySelector("#optimizeRouteRef").checked;
-        const categoriesChecked = []
-        const radius = 1
+
         const currentRoute = {
             routeName: "",
             request: {
@@ -865,10 +885,6 @@ export default function Map() {
                                 </select>
                             </div>
 
-<<<<<<< HEAD
-                    <div className='basis-1/12 flex place-content-center'> {/* my saved routes button */}
-                        <Link href="/savedroutes"><button className='font-bodyfont w-fit h-fit px-10 py-2.5  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button></Link>
-=======
                             <div> {/* checkbox */}
                                 <input id="optimizeRouteRef" type="checkbox" name='OptimiseChoice' value="OptimiseChoice"></input>
                                 <label for='OptimiseChoice' className='text-eggshell font-bodyfont ml-3'>Optimise Route</label>
@@ -898,7 +914,6 @@ export default function Map() {
                             <Link href={(user) ? "/map" : "/login"}><button className='font-bodyfont w-fit h-fit px-10 py-2.5  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button></Link>
                         </div>
 
->>>>>>> af939e4bbf7eecc5c25b30c4563c008c2ee7adee
                     </div>
 
                 </div>
@@ -914,7 +929,7 @@ export default function Map() {
                             <form className="flex flex-col text-sm">
                                 <div className="flex gap-2 items-center">
                                     <label>Water Activities</label>
-                                    <input className="category" name="Water Activities" type="checkbox" />
+                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Water Activities" type="checkbox" />
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <label>SAFRA Centres</label>
