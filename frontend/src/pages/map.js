@@ -10,7 +10,8 @@ import { useLogout } from '@/hooks/useLogout';
 import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import ReactDOM from 'react-dom';
-
+import Popup from '../components/popup'
+import ResearchedData from '@/data/ResearchedData.json'
 
 export default function Map() {
     const { user } = useAuthContext()
@@ -26,19 +27,16 @@ export default function Map() {
     const [gdestAutoComplete, setGDestAutoComplete] = useState(null)
     const [markersPolylines, setMarkersPolylines] = useState([])
     const [lat_lngArray, setLat_LngArray] = useState([])
-    
+
     const [isAttractionsDropdownOpen, setIsAttractionsDropdownOpen] = useState(false)
 
     const [waypointsNum, setWaypointsNum] = useState(2)
+    const [categoriesChecked, setCategoriesChecked] = useState([])
+
 
     const handleLogout = (e) => {
         e.preventDefault();
         logout()
-    }
-
-    const handleAttractionsDropdown = (e) => {
-        e.preventDefault();
-        setIsAttractionsDropdownOpen(!isAttractionsDropdownOpen)
     }
 
     const addWaypoint = (e) => {
@@ -46,17 +44,6 @@ export default function Map() {
         if (waypointsNum < 10) {
             setWaypointsNum(waypointsNum + 1)
         }
-
-        /*const waypointsList = document.querySelector("#waypointsList")
-        const inputDiv = document.createElement("div")
-        inputDiv.setAttributeNS(null, "className", "flex")
-        waypointsList.appendChild(inputDiv)
-        const inputField = document.createElement("input")
-        inputField.setAttributeNS(null, "className", "toRef px-3 py-1 border-1 w-11/12 rounded-md")
-        inputField.setAttribute("placeholder", "To where?")
-        inputDiv.appendChild(inputField)*/
-
-
 
     }
 
@@ -69,6 +56,28 @@ export default function Map() {
             }
         }
     }, [waypointsNum])
+
+
+    const clearMap = () => {
+        /**
+    * Clears all markers and polylines from the map
+    * @returns {void}
+    */
+        if (markersPolylines.length > 0) {
+            for (let i = 0; i < markersPolylines.length; i++) {
+                if (markersPolylines[i] != null) {
+                    try {
+                        // For polyline, since both won't give errors
+                        markersPolylines[i].setMap(null);
+                    } catch (TypeError) {
+                        // For advanced markers
+                        markersPolylines[i].map = null;
+                    }
+                }
+            }
+        }
+        markersPolylines.length = 0;
+    }
 
     const createRouteString = (result, waypoints) => {
         const from = result["routes"][0]["legs"][0]["start_address"];
@@ -322,12 +331,13 @@ export default function Map() {
                     }
                 });
             }
+            statsPanel.innerHTML = "Generating..."
             setTimeout(() => {
                 statsPanel.innerHTML = `<p>${outputStringArray.join("")}</p>`
                 if (!optimizeRoute) {
                     statsPanel.innerHTML += `<p><br>Optimize your route now for greater efficiency!`;
                 }
-            }, 1500);
+            }, 2000);
         }
     }
 
@@ -550,12 +560,12 @@ export default function Map() {
         const transportMode = route["request"]["travelMode"];
         const optimizeRoute = route["request"]["optimizeWaypoints"];
 
-        const categoriesChecked = route["categoriesChecked"];
-        const radius = route["radius"];
         const REQUEST = route["request"];
 
         let carbonFootprintCount = 0;
         let duration = 0;
+
+        clearMap();
 
         const directionsOverview = document.querySelector("#directionsOverview")
         const directionsPanel = document.querySelector("#directionsPanel");
@@ -753,6 +763,7 @@ export default function Map() {
 
     }
 
+
     const calcRoute = (e) => {
         e.preventDefault();
         const from = document.querySelector("#fromRef").value;
@@ -763,8 +774,7 @@ export default function Map() {
         const transportModeMenu = document.querySelector("#transportModeMenuRef")
         const transportMode = transportModeMenu.value.toUpperCase();
         const optimizeRoute = document.querySelector("#optimizeRouteRef").checked;
-        const categoriesChecked = []
-        const radius = 1
+
         const currentRoute = {
             routeName: "",
             request: {
@@ -800,7 +810,6 @@ export default function Map() {
                 autoCompleteOptions
             );
             const placesSearch = new google.maps.places.PlacesService(map);
-            //const allData = retrieveAllData();
 
             setGMap(map)
             setGDirectionsService(directionsService)
@@ -809,6 +818,188 @@ export default function Map() {
         }
     }
 
+    const haversine_distance = (pt1, pt2) => {
+        /**
+ * Calculates the great circle distance between two points using spherical trigonometry
+ * @param {Object} pt1 - Coordinates of the origin point as an object with 'lat' and 'lng' properties/functions
+ * @param {Object} pt2 - Coordinates of the point of interest as an object with 'lat' and 'lng' properties
+ * @returns {number} Distance between the two points rounded to two decimal places, in kilometers
+ */
+        const R = 6371.071;
+        const rlat1 = pt1.lat() * (Math.PI / 180);
+        const rlat2 = pt2["lat"] * (Math.PI / 180);
+        const difflat = rlat2 - rlat1;
+        const difflon = (pt2["lng"] - pt1.lng()) * (Math.PI / 180);
+
+        const distance =
+            2 *
+            R *
+            Math.asin(
+                Math.sqrt(
+                    Math.sin(difflat / 2) * Math.sin(difflat / 2) +
+                    Math.cos(rlat1) *
+                    Math.cos(rlat2) *
+                    Math.sin(difflon / 2) *
+                    Math.sin(difflon / 2)
+                )
+            );
+        return distance.toFixed(2);
+    }
+
+    const nearbyPlaceSearch = (lat_lngArray, categoriesChecked) => {
+        for (const lat_lng of lat_lngArray) {
+            for (const [theme, themePlace] of Object.entries(ResearchedData)) {
+                if (categoriesChecked.includes(theme)) {
+                    for (const place of themePlace) {
+                        if (
+                            haversine_distance(lat_lng, place["address"]) <= 1.5
+                        ) {
+                            createMarker({
+                                position: place["address"],
+                                title: place["description"],
+                                content: buildContent({
+                                    type: place["type"],
+                                    name: place["name"],
+                                    rating: place["rating"],
+                                    user_ratings_total: place["reviews"],
+                                    url: place["url"],
+                                }),
+                            });
+                            console.log("marker created")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    const createMarker = (details) => {
+        /**
+ * Creates advanced marker on the map
+ * @param {object} details - Details of the marker to be created
+ * @param {google.maps.LatLngLiteral} details.position - Position of the marker on the map
+ * @param {string} details.title - Title of the marker
+ * @param {HTMLElement} details.content - HTML content of the marker
+ * @param {google.maps.Map} map - Map on which to place the marker
+ * @returns {void}
+ *
+ * Note: background: result[i]["icon_background_color"]
+ *       glyph: new URL(`${result[i]["icon_mask_base_uri"]}.png`)
+ *       May configure collisionBehaviour + zoomBehaviour
+ */
+
+        const advancedMarkerView = new google.maps.marker.AdvancedMarkerView({
+            position: details["position"],
+            title: details["title"],
+            content: details["content"],
+            map: gmap,
+        });
+        markersPolylines.push(advancedMarkerView);
+        const element = advancedMarkerView.element;
+
+        ["focus", "pointerenter"].forEach((event) => {
+            element.addEventListener(event, () => {
+                highlight(advancedMarkerView);
+            });
+        });
+        ["blur", "pointerleave"].forEach((event) => {
+            element.addEventListener(event, () => {
+                unhighlight(advancedMarkerView);
+            });
+        });
+        advancedMarkerView.addListener("click", (event) => {
+            window.location.href = details["url"];
+        });
+    }
+
+    const buildContent = (property) => {
+        /**
+         * Creates HTML content for a marker, displaying the name, address, rating, user ratings total, and price level of the associated place
+         * @param {Object} property - Object containing the properties of the place to be displayed
+         * @param {string} property.type - Type of the place
+         * @param {string} property.name - Name of the place
+         * @param {string} [property.formatted_address] - Formatted address of the place
+         * @param {number} property.rating - Rating of the place
+         * @param {number} property.user_ratings_total - Total number of user ratings of the place
+         * @param {number} [property.price_level] - Price level of the place (from 1 to 4)
+         * @returns {Element} - Div element containing the HTML content for the marker
+         *
+         * References: https://developers.google.com/maps/documentation/javascript/advanced-markers/html-markers#maps_advanced_markers_html-javascript, https://fontawesome.com/search
+         */
+        const content = document.createElement("div");
+
+        content.classList.add("property");
+        property["type"] = "building";
+
+        content.innerHTML = `
+    <div class="icon">
+        <i aria-hidden="true" class="fa fa-icon fa-${property["type"]
+            }" title="${property["type"]}"></i>
+        <span class="fa-sr-only">${property["type"]}</span>
+    </div>
+    <div class="details">
+        <div class="name">${property["name"]}</div>
+        <div class="address">${property["formatted_address"] || ""}</div>
+        <div class="features">
+        <div>
+            <i aria-hidden="true" class="fa fa-solid fa-star rating" title="rating"></i>
+            <span class="fa-sr-only">rating</span>
+            <span>${property["rating"]}/5</span>
+        </div>
+        <div>
+            <i aria-hidden="true" class="fa fa-solid fa-user review" title="review"></i>
+            <span class="fa-sr-only">review</span>
+            <span>${property["user_ratings_total"]}</span>
+        </div>
+        <div>
+            <i aria-hidden="true" class="fa fa-solid fa-dollar price" title="price"></i>
+            <span class="fa-sr-only">price</span>
+            <span${property["price_level"] * "$" ||
+            property["price_level"] ||
+            "$$$$$$$$"
+            }  span>
+        </div>
+        </div>
+    </div>
+    `;
+        return content;
+    }
+
+    const highlight = (markerView) => {
+        /**
+         * Highlights a marker by adding the 'highlight' class to its content element and setting its z-index to 1
+         * @param {object} markerView - The marker to highlight
+         */
+        markerView.content.classList.add("highlight");
+        markerView.element.style.zIndex = 1;
+    }
+
+    const unhighlight = (markerView) => {
+        /**
+        * Removes the highlight from marker by removing the 'highlight' class from its content element and resetting its z-index to the default value
+        * @param {object} markerView - The marker to unhighlight
+        */
+        markerView.content.classList.remove("highlight");
+        markerView.element.style.zIndex = "";
+    }
+
+    const handleAttractionsDropdown = (e) => {
+        e.preventDefault();
+        setIsAttractionsDropdownOpen(!isAttractionsDropdownOpen)
+    }
+
+    const handleCategoryChecked = (e) => {
+
+        if (e.target.checked) {
+            setCategoriesChecked(oldArr => [...oldArr, e.target.name])
+        } else {
+            setCategoriesChecked(categoriesChecked.filter(cat => cat !== e.target.name))
+        }
+    }
+
+    useEffect(() => {
+        nearbyPlaceSearch(lat_lngArray, categoriesChecked)
+    }, [categoriesChecked])
 
 
     return (
@@ -871,7 +1062,7 @@ export default function Map() {
                             <div className='flex place-content-center'> {/* buttons */}
                                 <div>
                                     <button onClick={(e) => calcRoute(e)} className='font-bodyfont w-full max-h-fit bg-green py-2 px-3 rounded-lg drop-shadow-2xl mb-3'>Create Route</button>
-                                    <Link href='/savedroutes'><button className='font-bodyfont w-full max-h-fit bg-eggshell py-2 px-3 rounded-lg drop-shadow-2xl'>Save Route</button></Link>
+                                    <button className='font-bodyfont w-full max-h-fit bg-eggshell py-2 px-3 rounded-lg drop-shadow-2xl'>Save Route</button>
                                 </div>
 
                             </div>
@@ -888,7 +1079,7 @@ export default function Map() {
                         </div>
 
                         <div className='basis-1/12 flex place-content-center'> {/* my saved routes button */}
-                            <Link href={(user) ? "/map" : "/login"}><button className='font-bodyfont w-fit h-fit px-10 py-2.5  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button></Link>
+                            <Link href={(user) ? "/savedroutes" : "/login"}><button className='font-bodyfont w-fit h-fit px-10 py-2.5  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button></Link>
                         </div>
 
                     </div>
@@ -906,63 +1097,63 @@ export default function Map() {
                             <form className="flex flex-col text-sm">
                                 <div className="flex gap-2 items-center">
                                     <label>Water Activities</label>
-                                    <input className="category" name="Water Activities" type="checkbox" />
+                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Water Activities" type="checkbox" />
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <label>SAFRA Centres</label>
-                                    <input className="category" name="SAFRA Centres" type="checkbox" />
+                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="SAFRA Centres" type="checkbox" />
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <label>Food</label>
-                                    <input className="category" name="Food" type="checkbox" />
+                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Food" type="checkbox" />
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <label>Monuments</label>
-                                    <input className="category" name="Monuments" type="checkbox" />
+                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Monuments" type="checkbox" />
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <label>Museums</label>
-                                    <input className="category" name="Museums" type="checkbox" />
+                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Museums" type="checkbox" />
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <label>Skyrise Greenery</label>
-                                    <input className="category" name="Skyrise Greenery" type="checkbox" />
+                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Skyrise Greenery" type="checkbox" />
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <label>Museums</label>
-                                    <input className="category" name="Museums" type="checkbox" />
+                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Museums" type="checkbox" />
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <label>Tourist Attractions</label>
-                                    <input className="category" name="Tourist Attractions" type="checkbox" />
+                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Tourist Attractions" type="checkbox" />
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <label>Historic Sites</label>
-                                    <input className="category" name="Historic Sites" type="checkbox" />
+                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Historic Sites" type="checkbox" />
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <label>Park</label>
-                                    <input className="category" name="Park" type="checkbox" />
+                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Park" type="checkbox" />
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <label>Green Mark Buildings</label>
-                                    <input className="category" name="Green Mark Buildings" type="checkbox" />
+                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Green Mark Buildings" type="checkbox" />
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <label>Rent Bicycles</label>
-                                    <input className="category" name="Rent Bicycles" type="checkbox" />
+                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Rent Bicycles" type="checkbox" />
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <label>Sustainable Hotels</label>
-                                    <input className="category" name="Sustainable Hotels" type="checkbox" />
+                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Sustainable Hotels" type="checkbox" />
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <label>Shell Recharge/Greenlots (EV)</label>
-                                    <input className="category" name="Shell Recharge/Greenlots (EV)" type="checkbox" />
+                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Shell Recharge/Greenlots (EV)" type="checkbox" />
                                 </div>
                                 <div className="flex gap-2 items-center">
                                     <label>BlueSG (EV)</label>
-                                    <input className="category" name="BlueSG (EV)" type="checkbox" />
+                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="BlueSG (EV)" type="checkbox" />
                                 </div>
                             </form>
                         </div> : <></>}
