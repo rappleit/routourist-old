@@ -37,5 +37,15 @@ const signupUser = async (req, res) => {
     }
 }
 
+// save user
+const saveRoute = async(req,res) => {
+    const route = req.body
+    try{
 
-module.exports = { signupUser, loginUser }
+    } catch(error){
+        res.status(400).json({ error: error.message })
+    }
+}
+
+
+module.exports = { signupUser, loginUser, saveRoute }

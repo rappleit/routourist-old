@@ -10,7 +10,7 @@ import { useLogout } from '@/hooks/useLogout';
 import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import ReactDOM from 'react-dom';
-import Popup from '../components/popup'
+import Popup from '../components/popup';
 import ResearchedData from '@/data/ResearchedData.json'
 
 export default function Map() {
@@ -21,6 +21,8 @@ export default function Map() {
         componentRestrictions: { country: "sg" },
     };
 
+    const [currentroutelist,setcurrentroutelist] = useState(null)
+    const [openModal,setOpenModal] = useState(false)
     const [gmap, setGMap] = useState(null)
     const [gdirectionsService, setGDirectionsService] = useState(null)
     const [gplacesSearch, setGPlacesSearch] = useState(null)
@@ -56,7 +58,6 @@ export default function Map() {
             }
         }
     }, [waypointsNum])
-
 
     const clearMap = () => {
         /**
@@ -762,8 +763,31 @@ export default function Map() {
         }
 
     }
+    const saveRoute = (e) => {
+        setOpenModal(true)
+        e.preventDefault();
+        const from = document.querySelector("#fromRef").value;
+        const waypoints = Array.from(document.querySelectorAll("input.toRef")).map(
+            (waypoint) => waypoint.value
+        );
 
+        const transportModeMenu = document.querySelector("#transportModeMenuRef")
+        const transportMode = transportModeMenu.value.toUpperCase();
+        const optimizeRoute = document.querySelector("#optimizeRouteRef").checked;
 
+        const currentRoute = {
+            routeName: "",
+            request: {
+                origin: from,
+                destination: waypoints[waypoints.length - 1],
+                waypoints: waypoints,
+                travelMode: transportMode,
+                optimizeWaypoints: optimizeRoute,
+            },
+        };
+        setcurrentroutelist(currentRoute)
+
+    }
     const calcRoute = (e) => {
         e.preventDefault();
         const from = document.querySelector("#fromRef").value;
@@ -1007,6 +1031,7 @@ export default function Map() {
             <Helmet>
                 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBthJKxacm0pSrgo2yEEM_BUjmIryn8VOI&libraries=places,geometry,marker&v=beta&callback=initMap" async defer></script>
             </Helmet>
+            {openModal && <Popup closemodal= {setOpenModal} route ={currentroutelist}/> }
             <div className="bg-eggshell w-screen h-screen flex justify-between relative" >
                 <div id="map" className="z-1 fixed h-screen w-screen"></div>
                 <div className="bg-gray z-99 h-screen w-1/4 place-self-start fixed">
@@ -1062,7 +1087,7 @@ export default function Map() {
                             <div className='flex place-content-center'> {/* buttons */}
                                 <div>
                                     <button onClick={(e) => calcRoute(e)} className='font-bodyfont w-full max-h-fit bg-green py-2 px-3 rounded-lg drop-shadow-2xl mb-3'>Create Route</button>
-                                    <button className='font-bodyfont w-full max-h-fit bg-eggshell py-2 px-3 rounded-lg drop-shadow-2xl'>Save Route</button>
+                                    <button onClick={(e) => saveRoute(e)} className='font-bodyfont w-full max-h-fit bg-eggshell py-2 px-3 rounded-lg drop-shadow-2xl'>Save Route</button>
                                 </div>
 
                             </div>

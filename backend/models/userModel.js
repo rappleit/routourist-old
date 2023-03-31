@@ -13,6 +13,31 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: true
+  },
+  savedRoutes: {
+    routeName:{
+        type:String
+    },
+    overview:{
+        type:Array
+    },
+    request:{
+        origin:{
+            type:String
+        },
+        destination:{
+            type:String
+        },
+        waypoints:{
+            type: Array
+        },
+        travelMode:{
+            type:String
+        },
+        optimizedWaypoints:{
+            type:Boolean
+        }
+    }
   }
 })
 
