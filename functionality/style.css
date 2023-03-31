@@ -1,9 +1,10 @@
 :root {
     --building-color: #FF9800;
-    --hotel-color: #0288D1;
+    --hotel-color: #47bbfa;
     --shop-color: #7B1FA2;
     --ev-color: #29ce13;
     --bicycle-color: #d2ee35;
+
   }
   
   /*
@@ -204,3 +205,7 @@
   .property:not(.highlight):has(.fa-bicycle)::after {
     border-top: 9px solid var(--bicycle-color);
   }
+
+  
+
+  

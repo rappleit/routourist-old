@@ -12,6 +12,9 @@ import { Helmet } from 'react-helmet';
 import ReactDOM from 'react-dom';
 import Popup from '../components/popup';
 import ResearchedData from '@/data/ResearchedData.json'
+import BlueSGData from '@/data/BlueSGData.json'
+import OneMapData from '@/data/OneMapData.json'
+
 
 export default function Map() {
     const { user } = useAuthContext()
@@ -21,16 +24,18 @@ export default function Map() {
         componentRestrictions: { country: "sg" },
     };
 
-    const [currentroutelist,setcurrentroutelist] = useState(null)
-    const [openModal,setOpenModal] = useState(false)
+    const [currentroutelist, setcurrentroutelist] = useState(null)
+    const [openModal, setOpenModal] = useState(false)
     const [gmap, setGMap] = useState(null)
     const [gdirectionsService, setGDirectionsService] = useState(null)
     const [gplacesSearch, setGPlacesSearch] = useState(null)
     const [gdestAutoComplete, setGDestAutoComplete] = useState(null)
     const [markersPolylines, setMarkersPolylines] = useState([])
+    const [attractionMarkers, setAttractionMarkers] = useState([])
     const [lat_lngArray, setLat_LngArray] = useState([])
 
     const [isAttractionsDropdownOpen, setIsAttractionsDropdownOpen] = useState(false)
+    const allCategories = ["Water Activities", "SAFRA Centres", "Monuments", "Food", "Museums", "Skyrise Greenery", "Tourist Attractions", "Historic Sites", "Park", "Green Mark Buildings", "Rent Bicycles", "Sustainable Hotels", "Shell Recharge/Greenlots (EV)", "BlueSG (EV)"]
 
     const [waypointsNum, setWaypointsNum] = useState(2)
     const [categoriesChecked, setCategoriesChecked] = useState([])
@@ -77,7 +82,26 @@ export default function Map() {
                 }
             }
         }
-        markersPolylines.length = 0;
+
+        if (attractionMarkers.length > 0) {
+            for (let i = 0; i < attractionMarkers.length; i++) {
+                if (attractionMarkers[i].marker != null) {
+                    try {
+                        // For polyline, since both won't give errors
+                        attractionMarkers[i].marker.setMap(null);
+                    } catch (TypeError) {
+                        // For advanced markers
+                        attractionMarkers[i].marker.map = null;
+                    }
+                }
+            }
+        }
+        setAttractionMarkers([]);
+
+        const attractionCategoryChecklist = document.querySelectorAll("input.category")
+        for (const cat of attractionCategoryChecklist) {
+            cat.checked = false;
+        }
     }
 
     const createRouteString = (result, waypoints) => {
@@ -566,6 +590,7 @@ export default function Map() {
         let carbonFootprintCount = 0;
         let duration = 0;
 
+        setCategoriesChecked([]);
         clearMap();
 
         const directionsOverview = document.querySelector("#directionsOverview")
@@ -871,29 +896,34 @@ export default function Map() {
     }
 
     const nearbyPlaceSearch = (lat_lngArray, categoriesChecked) => {
+        const dataSets = [ResearchedData, BlueSGData, OneMapData]
         for (const lat_lng of lat_lngArray) {
-            for (const [theme, themePlace] of Object.entries(ResearchedData)) {
-                if (categoriesChecked.includes(theme)) {
-                    for (const place of themePlace) {
-                        if (
-                            haversine_distance(lat_lng, place["address"]) <= 1.5
-                        ) {
-                            createMarker({
-                                position: place["address"],
-                                title: place["description"],
-                                content: buildContent({
-                                    type: place["type"],
-                                    name: place["name"],
-                                    rating: place["rating"],
-                                    user_ratings_total: place["reviews"],
-                                    url: place["url"],
-                                }),
-                            });
-                            console.log("marker created")
+            for (const dataSet of dataSets) {
+                for (const [theme, themePlace] of Object.entries(dataSet)) {
+                    if (categoriesChecked.includes(theme)) {
+                        for (const place of themePlace) {
+                            if (
+                                haversine_distance(lat_lng, place["address"]) <= 0.8
+                            ) {
+                                createMarker({
+                                    theme: theme,
+                                    position: place["address"],
+                                    title: place["description"],
+                                    content: buildContent({
+                                        type: place["type"],
+                                        name: place["name"],
+                                        rating: place["rating"],
+                                        user_ratings_total: place["reviews"],
+                                        url: place["url"],
+                                    }),
+                                });
+                                console.log("marker created")
+                            }
                         }
                     }
                 }
             }
+
         }
     }
 
@@ -918,7 +948,13 @@ export default function Map() {
             content: details["content"],
             map: gmap,
         });
-        markersPolylines.push(advancedMarkerView);
+
+        const markerCategory = details["theme"];
+        
+        attractionMarkers.push({
+            category: markerCategory,
+            marker: advancedMarkerView
+        });
         const element = advancedMarkerView.element;
 
         ["focus", "pointerenter"].forEach((event) => {
@@ -953,13 +989,38 @@ export default function Map() {
         const content = document.createElement("div");
 
         content.classList.add("property");
-        property["type"] = "building";
+        let markerIcon = ""
+
+        switch (property["type"]) {
+            case "building":
+                markerIcon = "building"
+                break;
+            case "food":
+                markerIcon = "utensils"
+                break;
+            case "bicycle":
+                markerIcon = "bicycle"
+                break;
+            case "ev":
+                markerIcon = "car-side"
+                break;
+            case "hotel":
+                markerIcon = "hotel"
+                break;
+            case "park":
+                markerIcon = "tree"
+                break;
+            case "water":
+                markerIcon = "droplet"
+                break;
+            default:
+                markerIcon = "circle-exclamation"
+        }
 
         content.innerHTML = `
     <div class="icon">
-        <i aria-hidden="true" class="fa fa-icon fa-${property["type"]
-            }" title="${property["type"]}"></i>
-        <span class="fa-sr-only">${property["type"]}</span>
+        <i aria-hidden="true" class="fa fa-icon fa-${markerIcon}"></i>
+        <span class="fa-sr-only">${markerIcon}</span>
     </div>
     <div class="details">
         <div class="name">${property["name"]}</div>
@@ -1023,6 +1084,20 @@ export default function Map() {
 
     useEffect(() => {
         nearbyPlaceSearch(lat_lngArray, categoriesChecked)
+
+        for (const cat of allCategories) {
+            if (!categoriesChecked.includes(cat)) {
+                for (const catToBeRemoved of attractionMarkers.filter(item => item.category == cat))
+                    try {
+                        catToBeRemoved.marker.setMap(null);
+                    } catch (TypeError) {
+                        catToBeRemoved.marker.map = null;
+                    }
+                setAttractionMarkers(attractionMarkers.filter(item => item.category !== cat))
+
+            }
+        }
+
     }, [categoriesChecked])
 
 
@@ -1030,8 +1105,9 @@ export default function Map() {
         <>
             <Helmet>
                 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBthJKxacm0pSrgo2yEEM_BUjmIryn8VOI&libraries=places,geometry,marker&v=beta&callback=initMap" async defer></script>
+                <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"></script>
             </Helmet>
-            {openModal && <Popup closemodal= {setOpenModal} route ={currentroutelist}/> }
+            {openModal && <Popup closemodal={setOpenModal} route={currentroutelist} />}
             <div className="bg-eggshell w-screen h-screen flex justify-between relative" >
                 <div id="map" className="z-1 fixed h-screen w-screen"></div>
                 <div className="bg-gray z-99 h-screen w-1/4 place-self-start fixed">
@@ -1104,84 +1180,29 @@ export default function Map() {
                         </div>
 
                         <div className='basis-1/12 flex place-content-center'> {/* my saved routes button */}
-                            <Link href={(user) ? "/savedroutes" : "/login"}><button className='font-bodyfont w-fit h-fit px-10 py-2.5  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button></Link>
+                            <Link href={(user) ? "/map" : "/login"}><button className='font-bodyfont w-fit h-fit px-10 py-2.5  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button></Link>
                         </div>
 
                     </div>
 
                 </div>
 
-
-
-
-
                 <div className='font-bodyfont z-99 fixed right-0 mt-4 mr-12 flex items-start h-14'>
                     <div className="w-64 flex flex-col justify-center items-center">
                         <button onClick={(e) => handleAttractionsDropdown(e)} className='w-full max-h-fit bg-gray hover:bg-green rounded-xl text-eggshell py-1.5 px-4'>Show Nearby Attractions</button>
-                        {(isAttractionsDropdownOpen) ? <div className='w-full bg-gray py-1.5 px-4 mt-2 rounded-xl opacity-80 text-eggshell'>
+                        <div className={`${(isAttractionsDropdownOpen) ? "" : "hidden"} w-full bg-gray py-1.5 px-4 mt-2 rounded-xl opacity-80 text-eggshell`}>
                             <form className="flex flex-col text-sm">
-                                <div className="flex gap-2 items-center">
-                                    <label>Water Activities</label>
-                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Water Activities" type="checkbox" />
-                                </div>
-                                <div className="flex gap-2 items-center">
-                                    <label>SAFRA Centres</label>
-                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="SAFRA Centres" type="checkbox" />
-                                </div>
-                                <div className="flex gap-2 items-center">
-                                    <label>Food</label>
-                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Food" type="checkbox" />
-                                </div>
-                                <div className="flex gap-2 items-center">
-                                    <label>Monuments</label>
-                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Monuments" type="checkbox" />
-                                </div>
-                                <div className="flex gap-2 items-center">
-                                    <label>Museums</label>
-                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Museums" type="checkbox" />
-                                </div>
-                                <div className="flex gap-2 items-center">
-                                    <label>Skyrise Greenery</label>
-                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Skyrise Greenery" type="checkbox" />
-                                </div>
-                                <div className="flex gap-2 items-center">
-                                    <label>Museums</label>
-                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Museums" type="checkbox" />
-                                </div>
-                                <div className="flex gap-2 items-center">
-                                    <label>Tourist Attractions</label>
-                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Tourist Attractions" type="checkbox" />
-                                </div>
-                                <div className="flex gap-2 items-center">
-                                    <label>Historic Sites</label>
-                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Historic Sites" type="checkbox" />
-                                </div>
-                                <div className="flex gap-2 items-center">
-                                    <label>Park</label>
-                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Park" type="checkbox" />
-                                </div>
-                                <div className="flex gap-2 items-center">
-                                    <label>Green Mark Buildings</label>
-                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Green Mark Buildings" type="checkbox" />
-                                </div>
-                                <div className="flex gap-2 items-center">
-                                    <label>Rent Bicycles</label>
-                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Rent Bicycles" type="checkbox" />
-                                </div>
-                                <div className="flex gap-2 items-center">
-                                    <label>Sustainable Hotels</label>
-                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Sustainable Hotels" type="checkbox" />
-                                </div>
-                                <div className="flex gap-2 items-center">
-                                    <label>Shell Recharge/Greenlots (EV)</label>
-                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="Shell Recharge/Greenlots (EV)" type="checkbox" />
-                                </div>
-                                <div className="flex gap-2 items-center">
-                                    <label>BlueSG (EV)</label>
-                                    <input onChange={(e) => handleCategoryChecked(e)} className="category" name="BlueSG (EV)" type="checkbox" />
-                                </div>
+                                {
+                                    allCategories.map((cat) => (
+                                        <div className="flex gap-2 items-center">
+                                            <label>{cat}</label>
+                                            <input onChange={(e) => handleCategoryChecked(e)} className="category" name={cat} type="checkbox" />
+                                        </div>
+                                    ))
+                                }
+
                             </form>
-                        </div> : <></>}
+                        </div>
                     </div>
 
                     {(!user) ?

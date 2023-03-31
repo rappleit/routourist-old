@@ -2,10 +2,13 @@ import '@/styles/globals.css'
 import { AuthContextProvider } from '@/context/AuthContext';
 import Head from 'next/head';
 import '@/styles/marker.css'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faBuilding, faStar, faUser, faDollar } from '@fortawesome/free-solid-svg-icons'
 
 
 
 export default function App({ Component, pageProps }) {
+  library.add(faBuilding, faStar, faUser, faDollar)
   return (
     <>
       <Head>
