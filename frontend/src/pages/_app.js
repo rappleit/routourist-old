@@ -4,6 +4,7 @@ import Head from 'next/head';
 import '@/styles/marker.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faBuilding, faStar, faUser, faDollar } from '@fortawesome/free-solid-svg-icons'
+import { SavedRoutesContextProvider } from '@/context/SavedRouteContext';
 
 
 
@@ -17,8 +18,11 @@ export default function App({ Component, pageProps }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <AuthContextProvider>
-        <Component {...pageProps} />
+        <SavedRoutesContextProvider>
+          <Component {...pageProps} />
+        </SavedRoutesContextProvider>
       </AuthContextProvider>
     </>
   )

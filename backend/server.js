@@ -5,6 +5,7 @@ const express = require('express')
 const cors = require('cors');
 
 const userRoutes = require('./routes/user')
+const savedRouteRoutes = require('./routes/savedRoutes')
 
 //express app
 const app = express()
@@ -23,6 +24,7 @@ app.use((req, res, next) => {
 
 // routes
 app.use('/api/user', userRoutes)
+app.use('/api/savedRoutes', savedRouteRoutes)
 
 console.log(process.env.MONGO_URI)
 // connect to db

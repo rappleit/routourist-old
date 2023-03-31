@@ -14,17 +14,18 @@ import Popup from '../components/popup';
 import ResearchedData from '@/data/ResearchedData.json'
 import BlueSGData from '@/data/BlueSGData.json'
 import OneMapData from '@/data/OneMapData.json'
+import { useSavedRoutesContext } from '@/hooks/useSavedRouteContext';
 
 
 export default function Map() {
     const { user } = useAuthContext()
+    const{savedRoutes, dispatch} = useSavedRoutesContext()
     const { logout } = useLogout()
 
     const autoCompleteOptions = {
         componentRestrictions: { country: "sg" },
     };
 
-    const [currentroutelist, setcurrentroutelist] = useState(null)
     const [openModal, setOpenModal] = useState(false)
     const [gmap, setGMap] = useState(null)
     const [gdirectionsService, setGDirectionsService] = useState(null)
@@ -40,6 +41,10 @@ export default function Map() {
     const [waypointsNum, setWaypointsNum] = useState(2)
     const [categoriesChecked, setCategoriesChecked] = useState([])
 
+    //FOR SAVING ROUTES
+    const [currentRoute, setCurrentRoute] = useState({})
+    const [currentRouteOverview, setCurrentRouteOverview] = useState("")
+    const [savedRouteName, setSavedRouteName] = useState("")
 
     const handleLogout = (e) => {
         e.preventDefault();
@@ -102,6 +107,9 @@ export default function Map() {
         for (const cat of attractionCategoryChecklist) {
             cat.checked = false;
         }
+
+        setCurrentRoute({});
+        setCurrentRouteOverview("");
     }
 
     const createRouteString = (result, waypoints) => {
@@ -135,6 +143,7 @@ export default function Map() {
             routeString += loc + " -> ";
         }
         routeString += routeArray[routeArray.length - 1];
+        setCurrentRouteOverview(routeString)
         return routeString;
     }
 
@@ -587,11 +596,14 @@ export default function Map() {
 
         const REQUEST = route["request"];
 
+
         let carbonFootprintCount = 0;
         let duration = 0;
 
         setCategoriesChecked([]);
         clearMap();
+        setCurrentRoute(REQUEST)
+
 
         const directionsOverview = document.querySelector("#directionsOverview")
         const directionsPanel = document.querySelector("#directionsPanel");
@@ -789,28 +801,9 @@ export default function Map() {
 
     }
     const saveRoute = (e) => {
-        setOpenModal(true)
         e.preventDefault();
-        const from = document.querySelector("#fromRef").value;
-        const waypoints = Array.from(document.querySelectorAll("input.toRef")).map(
-            (waypoint) => waypoint.value
-        );
 
-        const transportModeMenu = document.querySelector("#transportModeMenuRef")
-        const transportMode = transportModeMenu.value.toUpperCase();
-        const optimizeRoute = document.querySelector("#optimizeRouteRef").checked;
-
-        const currentRoute = {
-            routeName: "",
-            request: {
-                origin: from,
-                destination: waypoints[waypoints.length - 1],
-                waypoints: waypoints,
-                travelMode: transportMode,
-                optimizeWaypoints: optimizeRoute,
-            },
-        };
-        setcurrentroutelist(currentRoute)
+        setOpenModal(true)
 
     }
     const calcRoute = (e) => {
@@ -824,8 +817,7 @@ export default function Map() {
         const transportMode = transportModeMenu.value.toUpperCase();
         const optimizeRoute = document.querySelector("#optimizeRouteRef").checked;
 
-        const currentRoute = {
-            routeName: "",
+        const reqRoute = {
             request: {
                 origin: from,
                 destination: waypoints[waypoints.length - 1],
@@ -834,7 +826,7 @@ export default function Map() {
                 optimizeWaypoints: optimizeRoute,
             },
         };
-        retrieveRoute(currentRoute);
+        retrieveRoute(reqRoute);
     }
 
     if (typeof window != "undefined") {
@@ -1107,13 +1099,13 @@ export default function Map() {
                 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBthJKxacm0pSrgo2yEEM_BUjmIryn8VOI&libraries=places,geometry,marker&v=beta&callback=initMap" async defer></script>
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"></script>
             </Helmet>
-            {openModal && <Popup closemodal={setOpenModal} route={currentroutelist} />}
+            {openModal && <Popup closemodal={setOpenModal} overview={currentRouteOverview} route={currentRoute} />}
             <div className="bg-eggshell w-screen h-screen flex justify-between relative" >
                 <div id="map" className="z-1 fixed h-screen w-screen"></div>
                 <div className="bg-gray z-99 h-screen w-1/4 place-self-start fixed">
                     <div className='mx-3 h-full flex flex-col '>
                         <div className='basis-1/12 flex items-baseline justify-between'> {/* title */}
-                            <h1 className='font-titleFont font-bold text-eggshell text-2xl mt-4'>Routourist</h1>
+                            <Link href="/"><h1 className='font-titleFont font-bold text-eggshell text-2xl mt-4'>Routourist</h1></Link>
                             <KeyboardDoubleArrowLeftIcon className='text-eggshell text-3xl cursor-pointer' />
                         </div>
 
@@ -1180,7 +1172,7 @@ export default function Map() {
                         </div>
 
                         <div className='basis-1/12 flex place-content-center'> {/* my saved routes button */}
-                            <Link href={(user) ? "/map" : "/login"}><button className='font-bodyfont w-fit h-fit px-10 py-2.5  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button></Link>
+                            <Link href={(user) ? "/savedroutes" : "/login"}><button className='font-bodyfont w-fit h-fit px-10 py-2.5  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button></Link>
                         </div>
 
                     </div>
