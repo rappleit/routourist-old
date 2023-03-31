@@ -4,6 +4,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import Link from 'next/link';
 import { useAuthContext } from '@/hooks/useAuthContext';
 import { useLogout } from '@/hooks/useLogout';
@@ -21,7 +22,7 @@ import DirectionsPopup from '@/components/directionsPopup';
 
 export default function Map() {
     const { user } = useAuthContext()
-    const{savedRoutes, dispatch} = useSavedRoutesContext()
+    const { savedRoutes, dispatch } = useSavedRoutesContext()
     const { logout } = useLogout()
 
     const autoCompleteOptions = {
@@ -31,6 +32,7 @@ export default function Map() {
     const [openinfo,setOpenInfo] = useState(false)
     const [openModal, setOpenModal] = useState(false)
     const [openDirectionsModal, setOpenDirectionsModal] = useState(false)
+    const [showSidebar, setShowSideBar] = useState(true)
 
     const fromRef = useRef()
     const toRef = useRef()
@@ -79,13 +81,9 @@ export default function Map() {
 
     const resetWaypoints = (e) => {
         e.preventDefault();
-        setWaypointsNum(2);const fromInput = document.querySelector("input.fromRef");
+        setWaypointsNum(2); const fromInput = document.querySelector("input.fromRef");
         fromRef.current.value = ""
         toRef.current.value = ""
-        
-        
-
-        
     }
 
     const clearMap = () => {
@@ -966,7 +964,7 @@ export default function Map() {
         });
 
         const markerCategory = details["theme"];
-        
+
         attractionMarkers.push({
             category: markerCategory,
             marker: advancedMarkerView
@@ -1128,11 +1126,14 @@ export default function Map() {
             <DirectionsPopup closemodal={setOpenDirectionsModal} isOpen={openDirectionsModal} />
             <div className="bg-eggshell w-screen h-screen flex justify-between relative" >
                 <div id="map" className="z-1 fixed h-screen w-screen"></div>
-                <div className="bg-gray z-99 h-screen w-1/4 place-self-start fixed">
-                    <div className='mx-3 h-full flex flex-col '>
+                <div className="bg-gray z-99 p-2 rounded-xl m-4 place-self-start fixed">
+                    <button onClick={() => setShowSideBar(true)}><KeyboardDoubleArrowRightIcon className={`${(showSidebar) ? "hidden" : ""} text-eggshell text-3xl cursor-pointer`} /></button>
+                </div>
+                <div className={`${(showSidebar) ? "" : "hidden"} bg-gray z-99 h-screen w-1/4 place-self-start fixed`}>
+                    <div className='mx-3 h-full flex flex-col'>
                         <div className='basis-1/12 flex items-baseline justify-between'> {/* title */}
                             <Link href="/"><h1 className='font-titleFont font-bold text-eggshell text-2xl mt-4'>Routourist</h1></Link>
-                            <KeyboardDoubleArrowLeftIcon className='text-eggshell text-3xl cursor-pointer' />
+                            <button onClick={() => setShowSideBar(false)}><KeyboardDoubleArrowLeftIcon className='text-eggshell text-3xl cursor-pointer' /></button>
                         </div>
 
                         <form className='basis-7/12 mt-2 flex flex-col justify-evenly'>
@@ -1156,9 +1157,9 @@ export default function Map() {
                             </div>
 
                             <div className='flex justify-center'> {/* this is for the add */}
-                                <div className="flex items-center justify-between w-full mb-2"> 
-                                    <button onClick={(e) => addWaypoint(e)} className="text-eggshell underline cursor-pointer">Add Waypoint</button>
-                                    <button onClick={(e) => resetWaypoints(e)} className="text-eggshell underline cursor-pointer">Reset</button>
+                                <div className="flex items-center justify-between w-full mb-2">
+                                    <button onClick={(e) => addWaypoint(e)} className="text-eggshell underline cursor-pointer hover:text-green">Add Waypoint</button>
+                                    <button onClick={(e) => resetWaypoints(e)} className="text-eggshell underline cursor-pointer hover:text-green">Reset</button>
                                 </div>
 
                             </div>
@@ -1180,8 +1181,8 @@ export default function Map() {
 
                             <div className='flex place-content-center mt-4'> {/* buttons */}
                                 <div>
-                                    <button onClick={(e) => calcRoute(e)} className='font-bodyfont w-full max-h-fit bg-green py-2 px-3 rounded-lg drop-shadow-2xl mb-3'>Create Route</button>
-                                    <button onClick={(e) => saveRoute(e)} className='font-bodyfont w-full max-h-fit bg-eggshell py-2 px-3 rounded-lg drop-shadow-2xl'>Save Route</button>
+                                    <button onClick={(e) => calcRoute(e)} className='font-bodyfont w-full max-h-fit bg-green hover:bg-lightgreen py-2 px-3 rounded-lg drop-shadow-2xl mb-3'>Create Route</button>
+                                    <button onClick={(e) => saveRoute(e)} className='font-bodyfont w-full max-h-fit bg-eggshell hover:bg-white py-2 px-3 rounded-lg drop-shadow-2xl'>Save Route</button>
                                 </div>
 
                             </div>
@@ -1198,7 +1199,7 @@ export default function Map() {
                         </div>
 
                         <div className='basis-1/12 flex place-content-center'> {/* my saved routes button */}
-                            <Link href={(user) ? "/savedroutes" : "/login"}><button className='font-bodyfont w-fit h-fit px-10 py-2.5 mb-4  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button></Link>
+                            <Link href={(user) ? "/savedroutes" : "/login"}><button className='font-bodyfont w-fit h-fit px-10 py-2.5 mb-4 bg-eggshell hover:bg-white rounded-lg drop-shadow-2xl'>My Saved Routes</button></Link>
                         </div>
 
                     </div>
