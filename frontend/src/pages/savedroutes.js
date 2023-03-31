@@ -35,6 +35,13 @@ export default function SavedRoutes() {
         }
     }, [dispatch, user])
 
+    const viewRoute = (e, routeName, routeOverview, route) => {
+        e.preventDefault()
+        localStorage.setItem("routeName", routeName)
+        localStorage.setItem("routeOverview", routeOverview)
+        localStorage.setItem("route", routePath)
+    }
+
     
     return(
         
@@ -62,7 +69,7 @@ export default function SavedRoutes() {
                                 <h1 className="text-lg font-medium">{sr.name}</h1>
                                 <p className="my-2 italic">{sr.overview}</p>
                             </div>
-                            <button className="bg-white rounded-md w-full p-2 my-2 hover:bg-slate-200 font-medium">See Route</button>
+                            <button className="bg-white rounded-md w-full p-2 my-2 hover:bg-slate-200 font-medium">View Route</button>
                         </div>
                     ))
                 }

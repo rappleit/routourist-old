@@ -15,6 +15,7 @@ import ResearchedData from '@/data/ResearchedData.json'
 import BlueSGData from '@/data/BlueSGData.json'
 import OneMapData from '@/data/OneMapData.json'
 import { useSavedRoutesContext } from '@/hooks/useSavedRouteContext';
+import DirectionsPopup from '@/components/directionsPopup';
 
 
 export default function Map() {
@@ -27,6 +28,8 @@ export default function Map() {
     };
 
     const [openModal, setOpenModal] = useState(false)
+    const [openDirectionsModal, setOpenDirectionsModal] = useState(false)
+
     const [gmap, setGMap] = useState(null)
     const [gdirectionsService, setGDirectionsService] = useState(null)
     const [gplacesSearch, setGPlacesSearch] = useState(null)
@@ -1100,6 +1103,7 @@ export default function Map() {
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"></script>
             </Helmet>
             {openModal && <Popup closemodal={setOpenModal} overview={currentRouteOverview} route={currentRoute} />}
+            <DirectionsPopup closemodal={setOpenDirectionsModal} isOpen={openDirectionsModal} />
             <div className="bg-eggshell w-screen h-screen flex justify-between relative" >
                 <div id="map" className="z-1 fixed h-screen w-screen"></div>
                 <div className="bg-gray z-99 h-screen w-1/4 place-self-start fixed">
@@ -1112,8 +1116,7 @@ export default function Map() {
                         <form className='basis-7/12 mt-2 flex flex-col justify-evenly'>
                             <div id="waypointsList" className='font-bodyfont flex flex-col h-24 gap-2 overflow-auto'> {/* this is for the inputs */}
                                 <div className='flex'>
-                                    <input id="fromRef" placeholder='From where?' className='px-3 py-1 border-1 w-11/12 rounded-md' type="text"></input>
-                                    <MoreVertIcon className='text-eggshell text-3xl' />
+                                    <input id="fromRef" placeholder='From where?' className=' px-3 py-1 border-1 w-11/12 rounded-md' type="text"></input>
                                 </div>
                                 <div className='flex'>
                                     <input placeholder='To where?' className='toRef px-3 py-1 border-1 w-11/12 rounded-md' type="text"></input>
@@ -1165,8 +1168,8 @@ export default function Map() {
                         <div className='h-full font-bodyfont basis-3/12 flex items-center '> {/* start to end section */}
                             <div className='h-fit'>
                                 <div id="directionsPanel" className="hidden"></div>
-                                <p id="directionsOverview" className="text-xs text-eggshell"></p>
-                                <p className='underline text-eggshell cursor-pointer text-sm'>Show Directions</p>
+                                <p id="directionsOverview" className="text-sm text-eggshell"></p>
+                                {(currentRoute.origin) ? <button onClick={() => setOpenDirectionsModal(true)} className="underline text-eggshell cursor-pointer text-sm">Show Directions</button> : <></>}
                             </div>
 
                         </div>
