@@ -7,6 +7,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { ariaHidden } from '@mui/material';
 import {useState} from 'react'
 import Link from 'next/link';
+import { useSavedRoutesContext } from '@/hooks/useSavedRouteContext';
 
 export function getStaticProps() {
     const userData =[{'email':'jason@gmail.com', 'password':'123','token':'2212','savedRoutes': [{'routeName':'Date Idea 1','request':{'origin':'Somapah 123 bukit','destination':'New Zealand 222','waypoints':['Somapah 123 bukit','Cafe Birdy Bukit 122','Rhoad Island Mall','SUTD'],'travelmode':'Drive','optimizeWaypoints':true}},{'routeName':'Date Idea 1','request':{'origin':'Somapah 123 bukit','destination':'New Zealand 222','waypoints':['Somapah 123 bukit','Cafe Birdy Bukit 122','Rhoad Island Mall','SUTD'],'travelmode':'Drive','optimizeWaypoints':true}}]}]
@@ -18,6 +19,9 @@ export function getStaticProps() {
 
 export default function SavedRoutes({routes}) {
     const [infoclicked,setinfoclicked]=useState(false)
+    const{savedRoutes, dispatch} = useSavedRoutesContext()
+
+
     
     return(
         
