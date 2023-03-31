@@ -30,6 +30,9 @@ export default function Map() {
     const [openModal, setOpenModal] = useState(false)
     const [openDirectionsModal, setOpenDirectionsModal] = useState(false)
 
+    const fromRef = useRef()
+    const toRef = useRef()
+
     const [gmap, setGMap] = useState(null)
     const [gdirectionsService, setGDirectionsService] = useState(null)
     const [gplacesSearch, setGPlacesSearch] = useState(null)
@@ -71,6 +74,17 @@ export default function Map() {
             }
         }
     }, [waypointsNum])
+
+    const resetWaypoints = (e) => {
+        e.preventDefault();
+        setWaypointsNum(2);const fromInput = document.querySelector("input.fromRef");
+        fromRef.current.value = ""
+        toRef.current.value = ""
+        
+        
+
+        
+    }
 
     const clearMap = () => {
         /**
@@ -1116,10 +1130,10 @@ export default function Map() {
                         <form className='basis-7/12 mt-2 flex flex-col justify-evenly'>
                             <div id="waypointsList" className='font-bodyfont flex flex-col h-24 gap-2 overflow-auto'> {/* this is for the inputs */}
                                 <div className='flex'>
-                                    <input id="fromRef" placeholder='From where?' className=' px-3 py-1 border-1 w-11/12 rounded-md' type="text"></input>
+                                    <input ref={fromRef} id="fromRef" placeholder='From where?' className=' px-3 py-1 border-1 w-11/12 rounded-md' type="text"></input>
                                 </div>
                                 <div className='flex'>
-                                    <input placeholder='To where?' className='toRef px-3 py-1 border-1 w-11/12 rounded-md' type="text"></input>
+                                    <input ref={toRef} placeholder='To where?' className='toRef px-3 py-1 border-1 w-11/12 rounded-md' type="text"></input>
                                     <MoreVertIcon className='text-eggshell text-3xl' />
                                 </div>
                                 {
@@ -1134,14 +1148,15 @@ export default function Map() {
                             </div>
 
                             <div className='flex justify-center'> {/* this is for the add */}
-                                <div>
-                                    <button onClick={(e) => addWaypoint(e)}><AddCircleOutlineIcon className='text-eggshell text-3xl cursor-pointer' /></button>
+                                <div className="flex items-center justify-between w-full mb-2"> 
+                                    <button onClick={(e) => addWaypoint(e)} className="text-eggshell underline cursor-pointer">Add Waypoint</button>
+                                    <button onClick={(e) => resetWaypoints(e)} className="text-eggshell underline cursor-pointer">Reset</button>
                                 </div>
 
                             </div>
 
                             <div className='font-bodyfont'>
-                                <select id="transportModeMenuRef" name="ModeTransport" className='bg-gray text-eggshell w-11/12 font-bodyfont border-2 border-eggshell rounded-md px-3 py-1'>
+                                <select id="transportModeMenuRef" name="ModeTransport" className='bg-gray text-eggshell w-11/12 font-bodyfont border-2 border-eggshell rounded-md px-3 py-1 mb-2'>
                                     <option value="Driving">Driving</option>
                                     <option value="Transit">Transit</option>
                                     <option value="Walking">Walk</option>
@@ -1155,7 +1170,7 @@ export default function Map() {
                                 <p className='text-eggshell font-bodyfont text-xs'>You can reduce your carbon footprint <br /> by optmising your route!</p>
                             </div>
 
-                            <div className='flex place-content-center'> {/* buttons */}
+                            <div className='flex place-content-center mt-4'> {/* buttons */}
                                 <div>
                                     <button onClick={(e) => calcRoute(e)} className='font-bodyfont w-full max-h-fit bg-green py-2 px-3 rounded-lg drop-shadow-2xl mb-3'>Create Route</button>
                                     <button onClick={(e) => saveRoute(e)} className='font-bodyfont w-full max-h-fit bg-eggshell py-2 px-3 rounded-lg drop-shadow-2xl'>Save Route</button>
@@ -1168,14 +1183,14 @@ export default function Map() {
                         <div className='h-full font-bodyfont basis-3/12 flex items-center '> {/* start to end section */}
                             <div className='h-fit'>
                                 <div id="directionsPanel" className="hidden"></div>
-                                <p id="directionsOverview" className="text-sm text-eggshell"></p>
-                                {(currentRoute.origin) ? <button onClick={() => setOpenDirectionsModal(true)} className="underline text-eggshell cursor-pointer text-sm">Show Directions</button> : <></>}
+                                <p id="directionsOverview" className="text-xs text-eggshell"></p>
+                                {(currentRoute.origin) ? <button onClick={() => setOpenDirectionsModal(true)} className="text-xs underline text-eggshell cursor-pointer text-sm">Show Directions</button> : <></>}
                             </div>
 
                         </div>
 
                         <div className='basis-1/12 flex place-content-center'> {/* my saved routes button */}
-                            <Link href={(user) ? "/savedroutes" : "/login"}><button className='font-bodyfont w-fit h-fit px-10 py-2.5  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button></Link>
+                            <Link href={(user) ? "/savedroutes" : "/login"}><button className='font-bodyfont w-fit h-fit px-10 py-2.5 mb-4  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button></Link>
                         </div>
 
                     </div>
