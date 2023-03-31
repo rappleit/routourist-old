@@ -1192,7 +1192,7 @@ export default function Map() {
                             <div className='h-fit'>
                                 <div id="directionsPanel" className="hidden"></div>
                                 <p id="directionsOverview" className="text-xs text-eggshell"></p>
-                                {(currentRoute.origin) ? <button onClick={() => setOpenDirectionsModal(true)} className="text-xs underline text-eggshell cursor-pointer text-sm">Show Directions</button> : <></>}
+                                {(currentRoute.origin) ? <button onClick={() => setOpenDirectionsModal(true)} className="text-xs underline text-eggshell cursor-pointer">Show Directions</button> : <></>}
                             </div>
 
                         </div>

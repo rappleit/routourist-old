@@ -24,9 +24,9 @@ export default function Home() {
                 <h1 className='text-gray font-titlefont font-black text-7xl laptop:text-5xl tablet:text-2xl'>Navigating just got simpler.</h1>
                 <p className='my-2 font-bodyfont text-base'>From one location to another to another and another</p>
               </div>
-              <div className='col-start-1 col-end-4 row-start-3 row-end-5 flex justify-center'>
+              <div className='col-start-1 col-end-4 row-start-3 row-end-5'>
                 <div className='self-center '>
-                  <Link href="/map"><button className='font-medium font-bodyfont rounded-full w-fit px-4 py-3 bg-gray text-eggshell shadow-md self-center text-base hover:bg-green hover:text-eggshell'>Try Now!</button></Link>
+                  <Link href="/map"><button className='ml-5 font-medium font-bodyfont rounded-full w-fit px-8 py-3 bg-gray text-eggshell shadow-md  text-base hover:bg-green hover:text-eggshell'>Try Now!</button></Link>
                 </div>
                 
               </div>
@@ -102,7 +102,7 @@ however them you like and start.</p>
                   <h1 className='font-titleFont font-bold text-6xl laptop:text-4xl tablet:text-xl text-eggshell'>"I didnt know I emitted that much carbon"</h1>
                 </div>
                 <div className=' basis-1/2 mx-auto self-center'>
-                  <button className='bg-gray text-base w-fit py-2 px-2 rounded-xl text-eggshell hover:text-gray hover:bg-eggshell'>Try Now</button>
+                  <button className='bg-gray text-base w-fit py-2 px-6 rounded-xl text-eggshell hover:text-gray hover:bg-eggshell'>Try Now</button>
                 </div>
               </div>
             </div>
