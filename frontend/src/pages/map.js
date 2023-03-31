@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import ReactDOM from 'react-dom';
 import Popup from '../components/popup';
+import Popupinfo from '@/components/popupinfo';
 import ResearchedData from '@/data/ResearchedData.json'
 import BlueSGData from '@/data/BlueSGData.json'
 import OneMapData from '@/data/OneMapData.json'
@@ -26,6 +27,7 @@ export default function Map() {
         componentRestrictions: { country: "sg" },
     };
 
+    const [openinfo,setOpenInfo] = useState(false)
     const [openModal, setOpenModal] = useState(false)
     const [gmap, setGMap] = useState(null)
     const [gdirectionsService, setGDirectionsService] = useState(null)
@@ -800,6 +802,11 @@ export default function Map() {
         }
 
     }
+    const inforender = (e) => {
+        e.preventDefault();
+        setOpenInfo(true)
+    }
+
     const saveRoute = (e) => {
         e.preventDefault();
 
@@ -1099,6 +1106,7 @@ export default function Map() {
                 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBthJKxacm0pSrgo2yEEM_BUjmIryn8VOI&libraries=places,geometry,marker&v=beta&callback=initMap" async defer></script>
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"></script>
             </Helmet>
+            {openinfo && <Popupinfo closeinfo = {setOpenInfo}/>}
             {openModal && <Popup closemodal={setOpenModal} overview={currentRouteOverview} route={currentRoute} />}
             <div className="bg-eggshell w-screen h-screen flex justify-between relative" >
                 <div id="map" className="z-1 fixed h-screen w-screen"></div>
@@ -1201,7 +1209,7 @@ export default function Map() {
                         <Link href="/login"><button className='max-w-fit bg-gray rounded-xl text-eggshell py-1.5 px-4 mx-3 hover:bg-green'><LogoutIcon className='mr-1' />Login</button></Link> :
                         <button onClick={(e) => handleLogout(e)} className='max-w-fit bg-gray rounded-xl text-eggshell py-1.5 px-4 mx-3 hover:bg-green'><LogoutIcon className='mr-1' />Logout</button>
                     }
-                    <InfoIcon className='text-gray text-3xl mx-3' />
+                    <button onClick={(e) => inforender(e)} ><InfoIcon className='text-gray text-3xl mx-3' /></button>
                 </div>
                 <div className="z-99 fixed bg-gray opacity-80 right-0 bottom-0 rounded-md text-eggshell flex place-content-center items-center mr-16 mb-8 p-4">
                     <div id="statsPanel" className='text-sm'></div>

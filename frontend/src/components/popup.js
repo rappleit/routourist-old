@@ -96,11 +96,11 @@ const Popup = ({closemodal, overview, route}) => {
                 <div className='z-10 h-full w-screen fixed bg-gray opacity-50'>
                     
                 </div>
-                <div className='z-30 opacity-100 w-1/3 h-1/2 bg-eggshell rounded-md self-center'>
+                <div className='z-30 opacity-100 w-1/4 h-1/3 bg-eggshell rounded-md self-center'>
                     <div>
                         <CancelIcon className='m-5 cursor-pointer text-3xl' onClick={(e) => handleClose(e)
                         }/>
-                        <h1 className='ml-5'>Please Login</h1>
+                        <h1 className='text-center font-bold text-xl'>Please Login</h1>
                         
                     </div>
                 </div>
@@ -115,10 +115,10 @@ const Popup = ({closemodal, overview, route}) => {
                 <div className='z-10 h-full w-screen fixed bg-gray opacity-50'>
                     
                 </div>
-                <div className='z-30 opacity-100 w-1/3 h-1/2 bg-eggshell rounded-md self-center'>
+                <div className='z-30 opacity-100 w-1/4 h-1/3 bg-eggshell rounded-md self-center'>
                     <div>
                         <CancelIcon className='m-5 cursor-pointer text-3xl' onClick={(e) => handleClose(e)}/>
-                        <h1 className='ml-5'>Please create a route first</h1>
+                        <h1 className='ml-5 text-lg m-4 font-medium text-center'>Please create a route first</h1>
                         
                     </div>
                 </div>
