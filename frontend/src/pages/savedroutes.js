@@ -45,7 +45,7 @@ export default function SavedRoutes() {
     
     return(
         
-        <div className="w-full bg-eggshell">
+        <div className="w-full h-screen bg-eggshell">
             <div className='flex justify-between mx-5 bg-eggshell'>
                 <div className='text-gray font-bodyfont font-medium text-md mt-4'> 
                     <Link href='/map'><span><ArrowBackIosIcon className='text-3xl'/>Back to Map</span></Link>

@@ -74,7 +74,7 @@ however them you like and start.</p>
 
               <div className='flex flex-col gap-1 basis-2/5'>
                 <img src='/website.png'></img>
-                <p>Graphic Interface that shows users their impact</p>
+                <p>Provide a user friendly experience</p>
               </div>
  
               <div className='flex flex-col gap-1 basis-2/5'>
@@ -99,7 +99,7 @@ however them you like and start.</p>
                 <div className='basis-1/2 my-auto self-center'>
                   <h1 className='font-titleFont font-bold text-6xl laptop:text-4xl tablet:text-xl text-eggshell'>"Going out feels less stressful"</h1>
                   <h1 className='font-titleFont font-bold text-6xl laptop:text-4xl tablet:text-xl text-eggshell my-5'>"Click here,Click there and Go"</h1>
-                  <h1 className='font-titleFont font-bold text-6xl laptop:text-4xl tablet:text-xl text-eggshell'>"Now I can lower my carbon footprint"</h1>
+                  <h1 className='font-titleFont font-bold text-6xl laptop:text-4xl tablet:text-xl text-eggshell'>"I didnt know I emitted that much carbon"</h1>
                 </div>
                 <div className=' basis-1/2 mx-auto self-center'>
                   <button className='bg-gray text-base w-fit py-2 px-2 rounded-xl text-eggshell hover:text-gray hover:bg-eggshell'>Try Now</button>
