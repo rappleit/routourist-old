@@ -12,11 +12,11 @@ export default function Home() {
          <div className='w-screen h-screen'>
             <div className='grid grid-cols-6 grid-rows-4 w-screen h-screen'>
 
-              <div className='col-start-1 col-end-5 row-start-1 row-end-2'>
-                <h1 className='bg-gray text-eggshell py-5 px-5 font-titlefont font-black text-8xl laptop:text-7xl tablet:text-3xl'>Routourist</h1>
+              <div className='col-start-1 col-end-7 row-start-1 row-end-2'>
+                <h1 className='bg-gray text-eggshell py-5 px-5 font-titlefont font-black text-8xl laptop:text-7xl tablet:text-4xl'>Routourist</h1>
               </div>
               <div className='col-start-4 col-end-7 row-start-1 row-end-5 flex place-self-center'>
-                  <img src='/planlocations.png' className='my-auto'></img>
+                  <img src='/directions.png' className='my-auto'></img>
 
               </div>
               
@@ -26,7 +26,7 @@ export default function Home() {
               </div>
               <div className='col-start-1 col-end-4 row-start-3 row-end-5 flex justify-center'>
                 <div className='self-center '>
-                  <Link href="/map"><button className='font-medium font-bodyfont rounded-full w-fit px-4 py-3 bg-gray text-eggshell shadow-md self-center text-xs hover:bg-green hover:text-eggshell'>Try Now!</button></Link>
+                  <Link href="/map"><button className='font-medium font-bodyfont rounded-full w-fit px-4 py-3 bg-gray text-eggshell shadow-md self-center text-base hover:bg-green hover:text-eggshell'>Try Now!</button></Link>
                 </div>
                 
               </div>
@@ -41,7 +41,7 @@ export default function Home() {
               
               <div className='basis-3/5 my-auto'>
                 <p className='font-bodyfont font-medium text-base text-eggshell mb-10'>about us</p>
-                <h2 className='font-titleFont font-bold text-7 laptop:text-5xl tablet:text-2xl text-eggshell'>Got a date you need to plan for?</h2>
+                <h2 className='font-titleFont font-bold text-7xl laptop:text-5xl tablet:text-2xl text-eggshell'>Got a date you need to plan for?</h2>
                 <h2 className='font-titleFont font-bold text-7xl laptop:text-5xl tablet:text-2xl text-eggshell'>Perhaps you want to explore?</h2>
                 <h2 className='font-titleFont font-bold text-7xl laptop:text-5xl tablet:text-2xl text-eggshell'>Maybe deliver some packages?</h2>
                 <h2 className='font-titleFont font-black text-7xl laptop:text-5xl tablet:text-2xl text-eggshell'>We got you.</h2>
@@ -61,32 +61,28 @@ however them you like and start.</p>
           </div>
 
 
-          <div className='h-screen '>
+          <div className='h-fit '>
             <div className='py-10 mx-5'>
               <p className='font-bodyfont font-medium text-base text-gray mb-10'>Our Goal</p>
               <h2 className='font-titleFont font-bold text-7xl laptop:text-5xl tablet:text-2xl text-gray'>Provide a convenient routing service that aims to be sustainable and promote other businesses</h2>
             </div>
-
-            <div className='flex gap-10 mx-10 grid-flow-row font-bodyfont text-center'>
-              <div className='flex flex-col gap-1 basis-1/3'>
+            <div className='flex flex-wrap gap-5 grid-flow-row font-bodyfont text-center w-4/6 mx-auto place-content-center pb-10'>
+              <div className='flex flex-col gap-1 basis-2/5 '>
                 <img src='/calculate.png'></img>
                 <p>Optimising routes to reduce carbon footprint</p>
               </div>
 
-              <div className='flex flex-col gap-1 basis-1/3'>
+              <div className='flex flex-col gap-1 basis-2/5'>
                 <img src='/website.png'></img>
                 <p>Graphic Interface that shows users their impact</p>
               </div>
-            <div >
-
-            </div>
-
-              <div className='flex flex-col gap-1 basis-1/3'>
+ 
+              <div className='flex flex-col gap-1 basis-2/5'>
                 <img src='/environmenttruck.png'></img>
                 <p>Recommends routes that emits lower carbon footprint </p>
               </div>
 
-              <div className='flex flex-col gap-1 basis-1/3'>
+              <div className='flex flex-col gap-1 basis-2/5'>
                 <img src='/notiff.png'></img>
                 <p>Recommends nearby attractions according to user needs</p>
               </div>
@@ -96,24 +92,33 @@ however them you like and start.</p>
 
           </div>
 
-          <div>
-            <div className='bg-green py-10'>
-              <div className='my-10 mx-5'>
-                <p className='font-bodyfont font-medium text-base text-eggshell mb-10'>Action</p>
-                <h2 className='font-titleFont font-bold text-5xl text-eggshell'>Make an impact today</h2>
-              </div>
-              <div className='col-span-2 row-span-1 justify-center ml-5'>
-                <button className='font-medium font-bodyfont rounded-full w-20 h-10 bg-gray text-eggshell shadow-md self-center hover:bg-eggshell hover:text-gray'>Login</button>
-                <button className='font-medium font-bodyfont rounded-full w-20 h-10 bg-eggshell text-gray ml-4 shadow-md self-center hover:bg-gray hover:text-eggshell'>Sign Up</button>
+          <div className='bg-green h-screen flex'>
+            <div className='pt-10 mx-5 basis-1/2'>
+              <p className='font-bodyfont font-medium text-base text-eggshell mb-10'>Action</p>
+              <div className='flex flex-col h-3/4 '>
+                <div className='basis-1/2 my-auto self-center'>
+                  <h1 className='font-titleFont font-bold text-6xl laptop:text-4xl tablet:text-xl text-eggshell'>"Going out feels less stressful"</h1>
+                  <h1 className='font-titleFont font-bold text-6xl laptop:text-4xl tablet:text-xl text-eggshell my-5'>"Click here,Click there and Go"</h1>
+                  <h1 className='font-titleFont font-bold text-6xl laptop:text-4xl tablet:text-xl text-eggshell'>"Now I can lower my carbon footprint"</h1>
+                </div>
+                <div className=' basis-1/2 mx-auto self-center'>
+                  <button className='bg-gray text-base w-fit py-2 px-2 rounded-xl text-eggshell hover:text-gray hover:bg-eggshell'>Try Now</button>
+                </div>
               </div>
             </div>
+
+            <div className='basis-1/2'>
+              <img src='/confident.png'></img>
+            </div>
+            
+            
           </div>
 
           <div className='h-1/4 bg-gray'>
             <div className='ml-5 py-10'>
               <p className='font-bodyfont font-medium text-base text-eggshell my-5'>Socials</p>
               <div className=' '>
-                <img src = 'Github_Logo_White.png' className='h-10 cursor-pointer'></img>
+                <Link href='https://github.com/rappleit/routourist'><img src = 'Github_Logo_White.png' className='h-10 cursor-pointer'></img></Link>
               </div>
             </div>
             
