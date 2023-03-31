@@ -13,7 +13,7 @@ export default function Home() {
             <div className='grid grid-cols-6 grid-rows-4 w-screen h-screen'>
 
               <div className='col-start-1 col-end-5 row-start-1 row-end-2'>
-                <h1 className='bg-gray text-eggshell py-5 px-5 font-titlefont font-black text-8xl laptop:text-6xl tablet:text-3xl'>Routourist</h1>
+                <h1 className='bg-gray text-eggshell py-5 px-5 font-titlefont font-black text-8xl laptop:text-7xl tablet:text-3xl'>Routourist</h1>
               </div>
               <div className='col-start-4 col-end-7 row-start-1 row-end-5 flex place-self-center'>
                   <img src='/planlocations.png' className='my-auto'></img>
@@ -21,8 +21,8 @@ export default function Home() {
               </div>
               
               <div className='col-start-1 col-end-4 row-start-2 row-end-3 ml-5 my-auto flex flex-col gap-5'>
-                <h1 className='text-gray font-titlefont font-black text-6xl laptop:text-4xl tablet:text-2xl'>Navigating just got simpler.</h1>
-                <p className='my-2 font-bodyfont text-xs'>From one location to another to another and another</p>
+                <h1 className='text-gray font-titlefont font-black text-7xl laptop:text-5xl tablet:text-2xl'>Navigating just got simpler.</h1>
+                <p className='my-2 font-bodyfont text-base'>From one location to another to another and another</p>
               </div>
               <div className='col-start-1 col-end-4 row-start-3 row-end-5 flex justify-center'>
                 <div className='self-center '>
@@ -41,10 +41,10 @@ export default function Home() {
               
               <div className='basis-3/5 my-auto'>
                 <p className='font-bodyfont font-medium text-base text-eggshell mb-10'>about us</p>
-                <h2 className='font-titleFont font-bold text-6xl laptop:text-4xl tablet:text-2xl text-eggshell'>Got a date you need to plan for?</h2>
-                <h2 className='font-titleFont font-bold text-6xl laptop:text-4xl tablet:text-2xl text-eggshell'>Perhaps you want to explore?</h2>
-                <h2 className='font-titleFont font-bold text-6xl laptop:text-4xl tablet:text-2xl text-eggshell'>Maybe deliver some packages?</h2>
-                <h2 className='font-titleFont font-black text-6xl laptop:text-4xl tablet:text-2xl text-eggshell'>We got you.</h2>
+                <h2 className='font-titleFont font-bold text-7 laptop:text-5xl tablet:text-2xl text-eggshell'>Got a date you need to plan for?</h2>
+                <h2 className='font-titleFont font-bold text-7xl laptop:text-5xl tablet:text-2xl text-eggshell'>Perhaps you want to explore?</h2>
+                <h2 className='font-titleFont font-bold text-7xl laptop:text-5xl tablet:text-2xl text-eggshell'>Maybe deliver some packages?</h2>
+                <h2 className='font-titleFont font-black text-7xl laptop:text-5xl tablet:text-2xl text-eggshell'>We got you.</h2>
               </div>
 
               <div className='basis-2/5'>
@@ -53,9 +53,9 @@ export default function Home() {
             </div>
 
             <div>
-              <p className='ml-5 font-bodyfont font-medium text-xl laptop:text-md tablet:text-xs text-eggshell'>You can select a range of  popular presetted routes and customise 
+              <p className='ml-5 font-bodyfont font-medium text-xl laptop:text-base tablet:text-xs text-eggshell'>You can select a range of  popular presetted routes and customise 
 however them you like and start.</p>
-<p className='ml-5 font-bodyfont font-medium text-xl laptop:text-md tablet:text-xs text-eggshell pb-20'>Its as simple as that!</p>
+<p className='ml-5 font-bodyfont font-medium text-xl laptop:text-base tablet:text-xs text-eggshell pb-20'>Its as simple as that!</p>
             </div>
             
           </div>
@@ -64,7 +64,7 @@ however them you like and start.</p>
           <div className='h-screen '>
             <div className='py-10 mx-5'>
               <p className='font-bodyfont font-medium text-base text-gray mb-10'>Our Goal</p>
-              <h2 className='font-titleFont font-bold text-6xl laptop:text-4xl tablet:text-2xl text-gray'>Provide a convenient routing service that aims to be sustainable and promote other businesses</h2>
+              <h2 className='font-titleFont font-bold text-7xl laptop:text-5xl tablet:text-2xl text-gray'>Provide a convenient routing service that aims to be sustainable and promote other businesses</h2>
             </div>
 
             <div className='flex gap-10 mx-10 grid-flow-row font-bodyfont text-center'>
