@@ -1172,7 +1172,7 @@ export default function Map() {
                         </div>
 
                         <div className='basis-1/12 flex place-content-center'> {/* my saved routes button */}
-                            <Link href={(user) ? "/map" : "/login"}><button className='font-bodyfont w-fit h-fit px-10 py-2.5  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button></Link>
+                            <Link href={(user) ? "/savedroutes" : "/login"}><button className='font-bodyfont w-fit h-fit px-10 py-2.5  bg-eggshell rounded-lg drop-shadow-2xl'>My Saved Routes</button></Link>
                         </div>
 
                     </div>

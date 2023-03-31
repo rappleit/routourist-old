@@ -5,27 +5,40 @@ import MyLocationIcon from '@mui/icons-material/MyLocation';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { ariaHidden } from '@mui/material';
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import Link from 'next/link';
 import { useSavedRoutesContext } from '@/hooks/useSavedRouteContext';
+import { useAuthContext } from '@/hooks/useAuthContext';
 
-export function getStaticProps() {
-    const userData =[{'email':'jason@gmail.com', 'password':'123','token':'2212','savedRoutes': [{'routeName':'Date Idea 1','request':{'origin':'Somapah 123 bukit','destination':'New Zealand 222','waypoints':['Somapah 123 bukit','Cafe Birdy Bukit 122','Rhoad Island Mall','SUTD'],'travelmode':'Drive','optimizeWaypoints':true}},{'routeName':'Date Idea 1','request':{'origin':'Somapah 123 bukit','destination':'New Zealand 222','waypoints':['Somapah 123 bukit','Cafe Birdy Bukit 122','Rhoad Island Mall','SUTD'],'travelmode':'Drive','optimizeWaypoints':true}}]}]
-    const userSavedRoutes= userData[0]['savedRoutes']
-    return {
-        props:{routes:userSavedRoutes}
-    }
-} 
 
-export default function SavedRoutes({routes}) {
-    const [infoclicked,setinfoclicked]=useState(false)
-    const{savedRoutes, dispatch} = useSavedRoutesContext()
+export default function SavedRoutes() {
 
+    const {savedRoutes, dispatch} = useSavedRoutesContext()
+    const {user} = useAuthContext()
+
+    useEffect(() => {
+        const fetchSavedRoutes = async () => {
+            const response = await fetch("http://localhost:8000/api/savedRoutes/", {
+                headers: {'Authorization': `Bearer ${user.token}`}
+            })
+            const json = await response.json()
+            if (!response.ok) {
+                console.error(json.error)
+            }
+            if (response.ok) {
+                dispatch({type: "SET_SAVEDROUTES", payload: json})
+            }
+        }
+        
+        if (user) {
+            fetchSavedRoutes()
+        }
+    }, [dispatch, user])
 
     
     return(
         
-        <div className="h-screen w-screen bg-eggshell">
+        <div className="w-full bg-eggshell">
             <div className='flex justify-between mx-5 bg-eggshell'>
                 <div className='text-gray font-bodyfont font-medium text-md mt-4'> 
                     <Link href='/map'><span><ArrowBackIosIcon className='text-3xl'/>Back to Map</span></Link>
@@ -41,20 +54,18 @@ export default function SavedRoutes({routes}) {
 
             <h1 className='font-titleFont font-bold text-5xl ml-5 my-4'>Saved Routes</h1>
 
-            <div className=' h-fit grid grid-cols-3 gap-x-14 gap-y-5 mx-5 '>
-                {routes.map(route => (
-                    <div className='bg-green flex flex-col gap-y-1 text-center w-full rounded-md drop-shadow-lg'>
-                        <h2 className='font-titleFont font-bold text-3xl mb-5 w-full h-full mt-5 '>{route.routeName}</h2>
-                        <span className='font-bodyfont font-medium'><MyLocationIcon className='mr-3'/>{route.request.origin}</span>
-                        <span><KeyboardArrowDownIcon/></span>
-                        <span > <MoreHorizIcon/></span>
-                        <span><KeyboardArrowDownIcon/></span>
-                        <span className='font-bodyfont font-medium mb-3'>{route.request.destination}</span>
-                    </div>
-                ))}
-                
-
-
+            <div className='grid grid-cols-3 md:grid-cols-4 gap-y-5 gap-x-8 mx-12 mt-12 pb-24 auto-rows-fr'>
+                {
+                    savedRoutes && savedRoutes.map((sr) => (
+                        <div className="h-full bg-green text-center rounded-md p-5 flex flex-col justify-between" key={sr._id}>
+                            <div>
+                                <h1 className="text-lg font-medium">{sr.name}</h1>
+                                <p className="my-2 italic">{sr.overview}</p>
+                            </div>
+                            <button className="bg-white rounded-md w-full p-2 my-2 hover:bg-slate-200 font-medium">See Route</button>
+                        </div>
+                    ))
+                }
                 
             </div>
         </div>
