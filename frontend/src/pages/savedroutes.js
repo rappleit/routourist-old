@@ -18,7 +18,7 @@ export default function SavedRoutes() {
 
     useEffect(() => {
         const fetchSavedRoutes = async () => {
-            const response = await fetch("http://localhost:8000/api/savedRoutes/", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_QUERY_URL}/api/savedRoutes/`, {
                 headers: { 'Authorization': `Bearer ${user.token}` }
             })
             const json = await response.json()

@@ -10,7 +10,7 @@ export const useSignup = () => {
         setIsLoading(true)
         setError(null)
         
-        const response = await fetch('http://localhost:8000/api/user/signup', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_QUERY_URL}/api/user/signup`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({email, password})

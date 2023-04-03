@@ -23,7 +23,7 @@ const Popup = ({closemodal, overview, route}) => {
         if (name !== "") {
            const routeToSave = {name, overview, route};
            console.log(routeToSave)
-           const response = await fetch('http://localhost:8000/api/savedRoutes', {
+           const response = await fetch(`${process.env.NEXT_PUBLIC_QUERY_URL}/api/savedRoutes`, {
             method: 'POST',
             body: JSON.stringify(routeToSave),
             headers: {
