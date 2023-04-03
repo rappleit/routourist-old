@@ -20,7 +20,7 @@ const Popupinfo = ({closeinfo}) => {
                 <div className='fixed z-30 h-screen w-screen bg-gray opacity-50 '>
 
                 </div>
-                <div className=' fixed h-4/5 w-3/4 bg-eggshell z-30 flex flex-col gap-5 px-10 pb-10 rounded-md '>
+                <div className=' fixed h-4/5 w-3/4 bg-eggshell z-30 flex flex-col gap-5 px-10 pb-10 rounded-md overflow-y-scroll'>
                     <div className='flex'>
                         <button onClick={(e) => handleClose(e)} className='mt-5 ml-5 text-xl'><CancelIcon/></button>
                         <h2 className='font-titleFont font-bold text-2xl w-full text-center mt-5'>Information</h2>
@@ -57,6 +57,11 @@ const Popupinfo = ({closeinfo}) => {
                         <p>To retrieve, your saved routes, simply click the button 'My Saved Routes',
                         you will be able to access the information of the routes and use it again by clicking on it
                         </p>
+                    </div>
+
+                    <div>
+                        <h3 className='font-titleFont font-bold text-xl'>About This Web App</h3>
+                        <p>Routourist is created for the Google Solutions Challenge 2023</p>
                     </div>
 
                     

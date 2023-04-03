@@ -17,9 +17,8 @@ const Popup = ({closemodal, overview, route}) => {
 
     const routeNameInputRef = useRef()
 
-    const handleSubmit= async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        
         const name = routeNameInputRef.current.value
         if (name !== "") {
            const routeToSave = {name, overview, route};
@@ -68,7 +67,7 @@ const Popup = ({closemodal, overview, route}) => {
                     <div className='z-10 h-full w-screen fixed bg-gray opacity-50'>
                         
                     </div>
-                    <div className='z-30 opacity-100 w-1/3 h-1/3 bg-eggshell rounded-md self-center pr-5'>
+                    <div className='z-30 opacity-100 w-1/3 bg-eggshell rounded-md self-center pr-5 pb-8'>
                         <CancelIcon className='text-3xl m-2 cursor-pointer' onClick={(e) => handleClose(e)
                                 }/>
     

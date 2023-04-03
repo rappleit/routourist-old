@@ -29,7 +29,7 @@ export default function Map() {
         componentRestrictions: { country: "sg" },
     };
 
-    const [openinfo,setOpenInfo] = useState(false)
+    const [openinfo, setOpenInfo] = useState(false)
     const [openModal, setOpenModal] = useState(false)
     const [openDirectionsModal, setOpenDirectionsModal] = useState(false)
     const [showSidebar, setShowSideBar] = useState(true)
@@ -50,11 +50,55 @@ export default function Map() {
 
     const [waypointsNum, setWaypointsNum] = useState(2)
     const [categoriesChecked, setCategoriesChecked] = useState([])
+    const [waypointValues, setWaypointValues] = useState([])
 
     //FOR SAVING ROUTES
     const [currentRoute, setCurrentRoute] = useState({})
     const [currentRouteOverview, setCurrentRouteOverview] = useState("")
     const [savedRouteName, setSavedRouteName] = useState("")
+    
+
+    useEffect(() => {
+        setTimeout(() => {
+            const fetchedRouteName = localStorage.getItem("routeName");
+            const fetchedRouteOverview = localStorage.getItem("routeOverview");
+            const fetchedRoutePath = localStorage.getItem("routePath")
+
+            if (fetchedRoutePath && fetchedRoutePath != undefined && fetchedRoutePath != "") {
+                setCurrentRoute(JSON.parse(fetchedRoutePath));
+                setCurrentRouteOverview(fetchedRouteOverview);
+                setWaypointsNum((JSON.parse(fetchedRoutePath)["waypoints"].length > 1) ? (JSON.parse(fetchedRoutePath)["waypoints"].length) : 2)
+                fromRef.current.value = JSON.parse(fetchedRoutePath)["origin"]
+                const directionsOverview = document.querySelector("#directionsOverview")
+                directionsOverview.innerHTML = fetchedRouteOverview;
+                const firstToInput = document.querySelector("#firstToRef")
+                const transportModeMenu = document.querySelector("#transportModeMenuRef")
+                transportModeMenu.value = JSON.parse(fetchedRoutePath)["travelMode"]
+                const optimizeRoute = document.querySelector("#optimizeRouteRef");
+
+                optimizeRoute.checked = JSON.parse(fetchedRoutePath)["optimizeWaypoints"]
+
+
+                if (JSON.parse(fetchedRoutePath)["waypoints"].length > 1) {
+                    //origin is in waypoints
+                    firstToInput.value = JSON.parse(fetchedRoutePath)["waypoints"][1]
+                    setWaypointValues(JSON.parse(fetchedRoutePath)["waypoints"].slice(1))
+                } else {
+                    //origin is not in waypoints
+                    firstToInput.value = JSON.parse(fetchedRoutePath)["waypoints"][0]
+                    setWaypointValues(JSON.parse(fetchedRoutePath)["waypoints"])
+                }
+                if (gdirectionsService != null) {
+                    calcRoute()
+                }
+               
+            }
+
+        }, 1000)
+       
+
+
+    }, [typeof window, gdirectionsService])
 
     const handleLogout = (e) => {
         e.preventDefault();
@@ -66,10 +110,12 @@ export default function Map() {
         if (waypointsNum < 10) {
             setWaypointsNum(waypointsNum + 1)
         }
-
+        setWaypointValues(waypointValues => [...waypointValues, ""])
+        
     }
 
     useEffect(() => {
+
         if (waypointsNum > 2) {
             const allDestInputs = document.querySelectorAll("input.toRef");
             for (var j = 0; j < allDestInputs.length; j++) {
@@ -81,9 +127,10 @@ export default function Map() {
 
     const resetWaypoints = (e) => {
         e.preventDefault();
-        setWaypointsNum(2); const fromInput = document.querySelector("input.fromRef");
+        setWaypointsNum(2);
         fromRef.current.value = ""
         toRef.current.value = ""
+        setWaypointValues([""])
     }
 
     const clearMap = () => {
@@ -160,7 +207,6 @@ export default function Map() {
             routeString += loc + " -> ";
         }
         routeString += routeArray[routeArray.length - 1];
-        setCurrentRouteOverview(routeString)
         return routeString;
     }
 
@@ -612,6 +658,9 @@ export default function Map() {
         const optimizeRoute = route["request"]["optimizeWaypoints"];
 
         const REQUEST = route["request"];
+        localStorage.setItem("routeName", "");
+        localStorage.setItem("routePath", JSON.stringify(REQUEST));
+
 
 
         let carbonFootprintCount = 0;
@@ -703,11 +752,14 @@ export default function Map() {
                             toSplit = to.split(",");
                             routeString += toSplit.length > 2 ? toSplit[1] : to;
                         }
+
                     }
 
                     // ASYNC directionsService request
                     setTimeout(() => {
                         directionsOverview.innerHTML = `${routeString}`;
+                        setCurrentRouteOverview(routeString)
+                        localStorage.setItem("routeOverview", routeString);
                         directionsPanel.innerHTML = `<h1>${routeString}</h1>`;
                         drawTransitRoute(
                             encodedRoutePolylineArray,
@@ -759,6 +811,8 @@ export default function Map() {
                             " -> " +
                             (toSplit.length > 2 ? toSplit[1] : to);
                         directionsOverview.innerHTML = `${routeString}`;
+                        setCurrentRouteOverview(routeString)
+                        localStorage.setItem("routeOverview", routeString);
                         directionsPanel.innerHTML = `<h1>${routeString}</h1>`;
 
                         setLat_LngArray(getLat_LngArray(result));
@@ -799,6 +853,8 @@ export default function Map() {
                         createRouteString(result, waypoints);
 
                     directionsOverview.innerHTML = `${routeString}`;
+                    setCurrentRouteOverview(routeString)
+                    localStorage.setItem("routeOverview", routeString);
                     directionsPanel.innerHTML = `<h1>${routeString}</h1>`;
 
                     setLat_LngArray(getLat_LngArray(result));
@@ -824,12 +880,13 @@ export default function Map() {
 
     const saveRoute = (e) => {
         e.preventDefault();
-
         setOpenModal(true)
 
     }
     const calcRoute = (e) => {
-        e.preventDefault();
+        if (e) {
+            e.preventDefault();
+        }
         const from = document.querySelector("#fromRef").value;
         const waypoints = Array.from(document.querySelectorAll("input.toRef")).map(
             (waypoint) => waypoint.value
@@ -848,10 +905,15 @@ export default function Map() {
                 optimizeWaypoints: optimizeRoute,
             },
         };
+
+
+        console.log(reqRoute)
         retrieveRoute(reqRoute);
     }
 
     if (typeof window != "undefined") {
+        const google = window.google = window.google ? window.google : {}
+
         window.initMap = () => {
             const map = new google.maps.Map(document.querySelector("#map"), {
                 center: { lat: 1.3521, lng: 103.8198 },
@@ -1119,9 +1181,10 @@ export default function Map() {
         <>
             <Helmet>
                 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBthJKxacm0pSrgo2yEEM_BUjmIryn8VOI&libraries=places,geometry,marker&v=beta&callback=initMap" async defer></script>
+
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"></script>
             </Helmet>
-            {openinfo && <Popupinfo closeinfo = {setOpenInfo}/>}
+            {openinfo && <Popupinfo closeinfo={setOpenInfo} />}
             {openModal && <Popup closemodal={setOpenModal} overview={currentRouteOverview} route={currentRoute} />}
             <DirectionsPopup closemodal={setOpenDirectionsModal} isOpen={openDirectionsModal} />
             <div className="bg-eggshell w-screen h-screen flex justify-between relative" >
@@ -1142,16 +1205,25 @@ export default function Map() {
                                     <input ref={fromRef} id="fromRef" placeholder='From where?' className=' px-3 py-1 border-1 w-11/12 rounded-md' type="text"></input>
                                 </div>
                                 <div className='flex'>
-                                    <input ref={toRef} placeholder='To where?' className='toRef px-3 py-1 border-1 w-11/12 rounded-md' type="text"></input>
+                                    <input id="firstToRef" ref={toRef} placeholder='To where?' className='toRef px-3 py-1 border-1 w-11/12 rounded-md' type="text"></input>
                                     <MoreVertIcon className='text-eggshell text-3xl' />
                                 </div>
                                 {
-                                    [...Array(waypointsNum - 2)].map((wp, i) => (
+                                    ((waypointsNum - 2) > 0) ? [...Array(waypointsNum - 2)].map((wp, i) => (
                                         <div className='flex' key={i}>
-                                            <input placeholder='To where?' className='toRef px-3 py-1 border-1 w-11/12 rounded-md' type="text" />
+                                            <input onChange={(e) => setWaypointValues(
+                                                waypointValues.map((item, j) => {
+                                                    if (j === i+1) {
+                                                        item = e.target.value
+                                                    } else {
+                                                        item = item
+                                                    }
+                                                }
+                                            )
+                                            )} placeholder='To where?' className='toRef px-3 py-1 border-1 w-11/12 rounded-md' type="text" value={waypointValues[i+1]}/>
                                             <MoreVertIcon className='text-eggshell text-3xl' />
                                         </div>
-                                    ))
+                                    )) : <></>
                                 }
 
                             </div>
@@ -1166,10 +1238,10 @@ export default function Map() {
 
                             <div className='font-bodyfont'>
                                 <select id="transportModeMenuRef" name="ModeTransport" className='bg-gray text-eggshell w-11/12 font-bodyfont border-2 border-eggshell rounded-md px-3 py-1 mb-2'>
-                                    <option value="Driving">Driving</option>
-                                    <option value="Transit">Transit</option>
-                                    <option value="Walking">Walk</option>
-                                    <option value="Bicycling">Cycling</option>
+                                    <option value="DRIVING">Driving</option>
+                                    <option value="TRANSIT">Transit</option>
+                                    <option value="WALKING">Walk</option>
+                                    <option value="BICYCLING">Cycling</option>
                                 </select>
                             </div>
 
