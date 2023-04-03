@@ -59,6 +59,7 @@ export default function Map() {
     
 
     useEffect(() => {
+        console.log(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY)
         setTimeout(() => {
             const fetchedRouteName = localStorage.getItem("routeName");
             const fetchedRouteOverview = localStorage.getItem("routeOverview");
@@ -156,10 +157,8 @@ export default function Map() {
             for (let i = 0; i < attractionMarkers.length; i++) {
                 if (attractionMarkers[i].marker != null) {
                     try {
-                        // For polyline, since both won't give errors
                         attractionMarkers[i].marker.setMap(null);
                     } catch (TypeError) {
-                        // For advanced markers
                         attractionMarkers[i].marker.map = null;
                     }
                 }
@@ -577,7 +576,7 @@ export default function Map() {
                                     content: new google.maps.marker.PinView({
                                         scale: 0.5,
                                         background: colors[i],
-                                        glyph: `${index + 1}. TD`,
+                                        glyph: `${String.fromCharCode(65 + i)}${index + 1}. TD`,
                                     }).element,
                                     map: gmap,
                                 })
@@ -589,7 +588,7 @@ export default function Map() {
                                     content: new google.maps.marker.PinView({
                                         scale: 0.5,
                                         background: colors[i],
-                                        glyph: `${index + 1}. TA`,
+                                        glyph: `${String.fromCharCode(65 + i)}${index + 1}. TA`,
                                     }).element,
                                     map: gmap,
                                 })
@@ -1180,7 +1179,7 @@ export default function Map() {
     return (
         <>
             <Helmet>
-                <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBthJKxacm0pSrgo2yEEM_BUjmIryn8VOI&libraries=places,geometry,marker&v=beta&callback=initMap" async defer></script>
+                <script src={"https://maps.googleapis.com/maps/api/js?key="+ process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY + "&libraries=places,geometry,marker&v=beta&callback=initMap"} async defer></script>
 
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"></script>
             </Helmet>
@@ -1284,10 +1283,10 @@ export default function Map() {
                         <div className={`${(isAttractionsDropdownOpen) ? "" : "hidden"} w-full bg-gray py-1.5 px-4 mt-2 rounded-xl opacity-80 text-eggshell`}>
                             <form className="flex flex-col text-sm">
                                 {
-                                    allCategories.map((cat) => (
-                                        <div className="flex gap-2 items-center">
-                                            <label>{cat}</label>
+                                    allCategories.map((cat, i) => (
+                                        <div className="flex gap-2 items-center" key={i}>
                                             <input onChange={(e) => handleCategoryChecked(e)} className="category" name={cat} type="checkbox" />
+                                            <label>{cat}</label>
                                         </div>
                                     ))
                                 }

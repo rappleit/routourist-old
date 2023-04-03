@@ -51,10 +51,6 @@ export default function SavedRoutes() {
                     <Link href='/map'><span><ArrowBackIosIcon className='text-3xl' />Back to Map</span></Link>
                 </div>
 
-                <div className='mt-4'>
-                    <InfoIcon className='text-3xl mr-3' />
-                    <span className='w-fit px-2 py-2 bg-gray text-eggshell rounded-md'><LogoutIcon />Login/Logout</span>
-                </div>
 
             </div>
 

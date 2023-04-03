@@ -97,12 +97,12 @@ however them you like and start.</p>
               <p className='font-bodyfont font-medium text-base text-eggshell mb-10'>Action</p>
               <div className='flex flex-col h-3/4 '>
                 <div className='basis-1/2 my-auto self-center'>
-                  <h1 className='font-titleFont font-bold text-6xl laptop:text-4xl tablet:text-xl text-eggshell'>"Going out feels less stressful"</h1>
-                  <h1 className='font-titleFont font-bold text-6xl laptop:text-4xl tablet:text-xl text-eggshell my-5'>"Click here,Click there and Go"</h1>
-                  <h1 className='font-titleFont font-bold text-6xl laptop:text-4xl tablet:text-xl text-eggshell'>"I didnt know I emitted that much carbon"</h1>
+                  <h1 className='font-titleFont font-bold text-6xl laptop:text-4xl tablet:text-xl text-eggshell'>&quot;Going out feels less stressful&quot;</h1>
+                  <h1 className='font-titleFont font-bold text-6xl laptop:text-4xl tablet:text-xl text-eggshell my-5'>&quot;Click here,Click there and Go&quot;</h1>
+                  <h1 className='font-titleFont font-bold text-6xl laptop:text-4xl tablet:text-xl text-eggshell'>&quot;I didnt know I emitted that much carbon&quot;</h1>
                 </div>
                 <div className=' basis-1/2 mx-auto self-center'>
-                  <button className='bg-gray text-base w-fit py-2 px-6 rounded-xl text-eggshell hover:text-gray hover:bg-eggshell'>Try Now</button>
+                <Link href="/map"><button className='bg-gray text-base w-fit py-2 px-6 rounded-xl text-eggshell hover:text-gray hover:bg-eggshell'>Try Now</button></Link>
                 </div>
               </div>
             </div>

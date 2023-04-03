@@ -5,6 +5,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { useAuthContext } from '../hooks/useAuthContext'
 import { useSavedRoutesContext } from '@/hooks/useSavedRouteContext';
 import Link from 'next/link';
+import GitHubButton from 'react-github-btn'
+
 
 Modal.setAppElement("#__next");
 
@@ -54,14 +56,17 @@ const Popupinfo = ({closeinfo}) => {
                         <h3 className='font-titleFont font-bold text-xl'>Save Route</h3>
                         <p>To access feature, you must be <span className='font-bold'>logged in</span>.</p>
                         <p>You can save incomplete/complete routes inputted, and name them.</p>
-                        <p>To retrieve, your saved routes, simply click the button 'My Saved Routes',
+                        <p>To retrieve, your saved routes, simply click the button &apos;My Saved Routes&apos;,
                         you will be able to access the information of the routes and use it again by clicking on it
                         </p>
                     </div>
 
                     <div>
                         <h3 className='font-titleFont font-bold text-xl'>About This Web App</h3>
-                        <p>Routourist is created for the Google Solutions Challenge 2023</p>
+                        <p>Routourist is created for the Google Solutions Challenge 2023 by students from the Singapore University of Technology and Design (SUTD) Google Developer Student Club (GDSC).<br/></p>
+                        <p>You can find our Github Repository here:</p>
+                        <GitHubButton href="https://github.com/rappleit/routourist">Check out our project!</GitHubButton>
+
                     </div>
 
                     

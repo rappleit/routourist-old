@@ -29,6 +29,7 @@ export const useSignup = () => {
             dispatch({type: "LOGIN", payload: json})
             
             setIsLoading(false)
+            router.push("/map")
         }
     }
 
