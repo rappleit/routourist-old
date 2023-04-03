@@ -16,6 +16,9 @@ Routourist is created for the [Google Solutions Challenge 2023](https://develope
 - Rachel Lim (https://github.com/rappleit)
 - Andrew Yu (https://github.com/Gnoot01)
 
+### Contact
+Email: [routourist3dc@gmail.com](mailto:routourist3dc@gmail.com)
+
 ---
 ## Setup Guide
 
@@ -46,7 +49,7 @@ Step 2.4: Add in your own JWT Secret in your `.env` file after `SECRET=` (This c
 
 Step 2.5: Run the backend
 ```
-npm run dev
+npm start
 ```
 
 Step 3: Go to the `frontend` folder
@@ -70,6 +73,11 @@ Step 3.3: Obtain API key from Google Cloud Console
 6. Enable Places, Directions, Geocoding, Maps Javascript APIs from the API "Library"
 
 Paste the copied API Key in your `.env.local` file next to `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=`
+
+Step 3.4: Run the frontend
+```
+npm run dev
+```
 
 
 
