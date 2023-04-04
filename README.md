@@ -3,6 +3,8 @@ Routourist is a route builder web application that aims to promote sustainable t
 
 [Try Routourist Now!](https://routourist.onrender.com)
 
+(Please wait a while for it to load)
+
 ## Features
 - 🗺️ Enter a starting location and destination(s), choose your preferred mode of transportation, and Routourist will generate a route through every location!
 - 📊 Statistics on the amount of carbon emissions generated from your route, with comparisons to the carbon emissions generated when other modes of transport are selected
