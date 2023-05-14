@@ -1,6 +1,3 @@
-// https://webninjadeveloper.com/javascript/javascript-google-directions-api-example-to-display-routes-between-two-locations-in-google-maps/
-// "npm run build" everytime change is made, then "npm start"
-
 import InfoIcon from "@mui/icons-material/Info";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -30,7 +27,6 @@ export default function Map() {
     const autoCompleteOptions = {
         componentRestrictions: {country: "sg"},
     };
-    var layers = {};
     
     const [openinfo, setOpenInfo] = useState(false);
     const [openModal, setOpenModal] = useState(false);
@@ -40,6 +36,7 @@ export default function Map() {
     const fromRef = useRef();
     const toRef = useRef();
 
+    const [glayers, setGLayers] = useState(null);
     const [gmap, setGMap] = useState(null);
     const [gdirectionsService, setGDirectionsService] = useState(null);
     const [gplacesSearch, setGPlacesSearch] = useState(null);
@@ -775,7 +772,7 @@ export default function Map() {
         // Textual display of directions
         directionsRenderer.setPanel(directionsPanel);
         markersPolylines.push(directionsRenderer);
-        Object.entries(layers).forEach(([transportmode, layer]) =>
+        Object.entries(glayers).forEach(([transportmode, layer]) =>
             transportMode === transportmode
                 ? layer.setMap(map)
                 : layer.setMap(null)
@@ -1040,7 +1037,7 @@ export default function Map() {
             const transitLayer = new google.maps.TransitLayer();
             const drivingLayer = new google.maps.TrafficLayer();
             const bicyclingLayer = new google.maps.BicyclingLayer();
-            layers = {
+            const layers = {
                 TRANSIT: transitLayer,
                 DRIVING: drivingLayer,
                 BICYCLING: bicyclingLayer,
@@ -1066,6 +1063,7 @@ export default function Map() {
             );
             const placesSearch = new google.maps.places.PlacesService(map);
 
+            setGLayers(layers);
             setGMap(map);
             setGDirectionsService(directionsService);
             setGPlacesSearch(placesSearch);
