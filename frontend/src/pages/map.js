@@ -774,7 +774,7 @@ export default function Map() {
         markersPolylines.push(directionsRenderer);
         Object.entries(glayers).forEach(([transportmode, layer]) =>
             transportMode === transportmode
-                ? layer.setMap(map)
+                ? layer.setMap(gmap)
                 : layer.setMap(null)
         );
 
