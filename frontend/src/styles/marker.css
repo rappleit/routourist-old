@@ -54,9 +54,17 @@
 
 .property .address {
   color: #9E9E9E;
-  font-size: 10px;
+  font-size: 11px;
   margin-bottom: 10px;
   margin-top: 5px;
+}
+
+.property .description {
+  color: lightblue;
+  font-size: 9px;
+  margin-bottom: 10px;
+  word-wrap: break-word;
+  max-width: 100%;
 }
 
 .property .features {
@@ -84,9 +92,9 @@
   background-color: #FFFFFF;
   border-radius: 8px;
   box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.2);
-  height: 80px;
+  height: auto;
   padding: 8px 15px;
-  width: auto;
+  width: 300px;
 }
 
 .property.highlight::after {
