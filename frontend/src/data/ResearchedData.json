@@ -4,7 +4,7 @@
             "name": "Coastline Leisure",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.3120099,
                 "lng": 103.922606
@@ -17,7 +17,7 @@
             "name": "Coastline Leisure",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.30668,
                 "lng": 103.935039
@@ -30,7 +30,7 @@
             "name": "GoCycling",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.302569,
                 "lng": 103.917722
@@ -43,7 +43,7 @@
             "name": "GoCycling",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.314115,
                 "lng": 103.960188
@@ -56,7 +56,7 @@
             "name": "GoCycling",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.378455,
                 "lng": 103.897158
@@ -69,7 +69,7 @@
             "name": "AIRE MTB",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.352083,
                 "lng": 103.819836
@@ -82,7 +82,7 @@
             "name": "GoGreen",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.352083,
                 "lng": 103.819836
@@ -95,7 +95,7 @@
             "name": "GoCycling",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.355322,
                 "lng": 103.988337
@@ -108,7 +108,7 @@
             "name": "GoCycling",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.3730929,
                 "lng": 104.0055299
@@ -121,7 +121,7 @@
             "name": "GoCycling",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.391593,
                 "lng": 103.989133
@@ -134,7 +134,7 @@
             "name": "Wheeelers",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.414844,
                 "lng": 103.898768
@@ -147,7 +147,7 @@
             "name": "GoCycling",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.419049,
                 "lng": 103.910365
@@ -160,7 +160,7 @@
             "name": "GoCycling",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.292309,
                 "lng": 103.766107
@@ -173,7 +173,7 @@
             "name": "GoCycling",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.374766,
                 "lng": 103.9523509
@@ -186,7 +186,7 @@
             "name": "Cycling @ Punggol",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.401546,
                 "lng": 103.890067
@@ -199,7 +199,7 @@
             "name": "GoCycling",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.344416,
                 "lng": 103.730542
@@ -212,7 +212,7 @@
             "name": "GoCycling",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.289069,
                 "lng": 103.862943
@@ -225,7 +225,7 @@
             "name": "Lifestyle Bike N Skate",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.302256,
                 "lng": 103.907597
@@ -238,7 +238,7 @@
             "name": "Jomando Adventure and Recreation",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.420877,
                 "lng": 103.912046
@@ -251,7 +251,7 @@
             "name": "Comfort Bicycle",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.4008529,
                 "lng": 103.959671
@@ -264,7 +264,7 @@
             "name": "Bikes @ Waterway",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.40977,
                 "lng": 103.904703
@@ -277,7 +277,7 @@
             "name": "Bicycle Hut",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.28983,
                 "lng": 103.849601
@@ -290,7 +290,7 @@
             "name": "City Scoot",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.28983,
                 "lng": 103.849601
@@ -303,7 +303,7 @@
             "name": "N.o. 25",
             "description": "Opening Hours: ",
             "type": "bicycle",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.402671,
                 "lng": 103.9702771
@@ -318,7 +318,7 @@
             "name": "Marina Bay Sands",
             "description": "Sustainable Practices: ",
             "type": "hotel",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.282275,
                 "lng": 103.858322
@@ -331,7 +331,7 @@
             "name": "Oasia Hotel",
             "description": "Sustainable Practices: ",
             "type": "hotel",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.275815,
                 "lng": 103.844358
@@ -344,7 +344,7 @@
             "name": "Crowne Plaza",
             "description": "Sustainable Practices: ",
             "type": "hotel",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.358695,
                 "lng": 103.987985
@@ -357,7 +357,7 @@
             "name": "Oasia Hotel",
             "description": "Sustainable Practices: ",
             "type": "hotel",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.320287,
                 "lng": 103.845191
@@ -370,7 +370,7 @@
             "name": "Parkroyal",
             "description": "Sustainable Practices: ",
             "type": "hotel",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.290989,
                 "lng": 103.857422
@@ -383,7 +383,7 @@
             "name": "Oasia Hotel",
             "description": "Sustainable Practices: ",
             "type": "hotel",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.253281,
                 "lng": 103.819301
@@ -396,7 +396,7 @@
             "name": "The Grand Hyatt",
             "description": "Sustainable Practices: ",
             "type": "hotel",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.3064309,
                 "lng": 103.832783
@@ -409,7 +409,7 @@
             "name": "Lloyd's Inn",
             "description": "Sustainable Practices: ",
             "type": "hotel",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.297187,
                 "lng": 103.840424
@@ -422,7 +422,7 @@
             "name": "Pan Pacific",
             "description": "Sustainable Practices: ",
             "type": "hotel",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.300011,
                 "lng": 103.860309
@@ -435,7 +435,7 @@
             "name": "Pan Pacific",
             "description": "Sustainable Practices: ",
             "type": "hotel",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.292001,
                 "lng": 103.858718
@@ -448,7 +448,7 @@
             "name": "Parkroyal",
             "description": "Sustainable Practices: ",
             "type": "hotel",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.285605,
                 "lng": 103.8464
@@ -461,7 +461,7 @@
             "name": "Parkroyal",
             "description": "Sustainable Practices: ",
             "type": "hotel",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.299782,
                 "lng": 103.860659
@@ -474,7 +474,7 @@
             "name": "Parkroyal",
             "description": "Sustainable Practices: ",
             "type": "hotel",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.310676,
                 "lng": 103.855615
@@ -487,7 +487,7 @@
             "name": "JW Mariott",
             "description": "Sustainable Practices: ",
             "type": "hotel",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.2946279,
                 "lng": 103.855476
@@ -502,7 +502,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.290006,
                 "lng": 103.832466
@@ -515,7 +515,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.34991,
                 "lng": 103.738553
@@ -528,7 +528,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.306348,
                 "lng": 103.830876
@@ -541,7 +541,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.304713,
                 "lng": 103.823345
@@ -554,7 +554,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.302959,
                 "lng": 103.837188
@@ -567,7 +567,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.33079,
                 "lng": 103.799036
@@ -580,7 +580,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.344118,
                 "lng": 103.707646
@@ -593,7 +593,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.348069,
                 "lng": 103.838213
@@ -606,7 +606,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.3357631,
                 "lng": 103.7445445
@@ -619,7 +619,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.317388,
                 "lng": 103.653143
@@ -632,7 +632,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.3066305,
                 "lng": 103.7910604
@@ -645,7 +645,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.289904,
                 "lng": 103.80764
@@ -658,7 +658,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.347388,
                 "lng": 103.764873
@@ -671,7 +671,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.323306,
                 "lng": 103.817323
@@ -684,7 +684,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.290607,
                 "lng": 103.806854
@@ -697,7 +697,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.33861,
                 "lng": 103.7519329
@@ -710,7 +710,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.270457,
                 "lng": 103.812772
@@ -723,7 +723,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.292095,
                 "lng": 103.810034
@@ -736,7 +736,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.330888,
                 "lng": 103.748645
@@ -749,7 +749,7 @@
             "name": "Shell Recharge/Greenlots (EV)",
             "description": "Availability: ",
             "type": "ev",
-            "url": "www.google.com",
+            "formatted_address": "FORMATTED_ADDRESS",
             "address": {
                 "lat": 1.3856949,
                 "lng": 103.746266
