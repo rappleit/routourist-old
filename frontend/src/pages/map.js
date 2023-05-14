@@ -30,6 +30,7 @@ export default function Map() {
     const autoCompleteOptions = {
         componentRestrictions: {country: "sg"},
     };
+    var layers;
 
     const [openinfo, setOpenInfo] = useState(false);
     const [openModal, setOpenModal] = useState(false);
