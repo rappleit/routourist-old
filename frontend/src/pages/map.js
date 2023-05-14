@@ -30,7 +30,8 @@ export default function Map() {
     const autoCompleteOptions = {
         componentRestrictions: {country: "sg"},
     };
-
+    var layers = {};
+    
     const [openinfo, setOpenInfo] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [openDirectionsModal, setOpenDirectionsModal] = useState(false);
@@ -1039,7 +1040,7 @@ export default function Map() {
             const transitLayer = new google.maps.TransitLayer();
             const drivingLayer = new google.maps.TrafficLayer();
             const bicyclingLayer = new google.maps.BicyclingLayer();
-            var layers = {
+            layers = {
                 TRANSIT: transitLayer,
                 DRIVING: drivingLayer,
                 BICYCLING: bicyclingLayer,
