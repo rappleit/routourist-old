@@ -30,7 +30,6 @@ export default function Map() {
     const autoCompleteOptions = {
         componentRestrictions: {country: "sg"},
     };
-    var layers;
 
     const [openinfo, setOpenInfo] = useState(false);
     const [openModal, setOpenModal] = useState(false);
@@ -77,7 +76,6 @@ export default function Map() {
     const [savedRouteName, setSavedRouteName] = useState("");
 
     useEffect(() => {
-        console.log(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
         setTimeout(() => {
             const fetchedRouteName = localStorage.getItem("routeName");
             const fetchedRouteOverview = localStorage.getItem("routeOverview");
@@ -1041,7 +1039,7 @@ export default function Map() {
             const transitLayer = new google.maps.TransitLayer();
             const drivingLayer = new google.maps.TrafficLayer();
             const bicyclingLayer = new google.maps.BicyclingLayer();
-            layers = {
+            var layers = {
                 TRANSIT: transitLayer,
                 DRIVING: drivingLayer,
                 BICYCLING: bicyclingLayer,
@@ -1138,7 +1136,6 @@ export default function Map() {
                                         price: place["price"],
                                     }),
                                 });
-                                console.log("marker created");
                             }
                         }
                     }
